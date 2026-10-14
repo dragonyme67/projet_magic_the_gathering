@@ -1,12 +1,15 @@
+
 #include <drogon/drogon.h>
 
 int main() {
     drogon::app().registerHandler(
-        "/test",
+        "/api/hello",
         [](const drogon::HttpRequestPtr&,
            std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
-            auto response = drogon::HttpResponse::newHttpResponse();
-            response->setBody("Drogon fonctionne !");
+            Json::Value json;
+            json["message"] = "Bonjour depuis Drogon !";
+
+            auto response = drogon::HttpResponse::newHttpJsonResponse(json);
             callback(response);
         }
     );
