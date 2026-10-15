@@ -1,9 +1,14 @@
 
 #include <drogon/drogon.h>
+#include <cstdlib>
 
 
 int main() {
-    drogon::app().loadConfigFile("/home/etud/Documents/Projet_Magic/backend/config.json");
+    const char* configFile = std::getenv("CONFIG_FILE");
+    const char* listenAddr = std::getenv("LISTEN_ADDR");
+
+    drogon::app().loadConfigFile(
+        configFile ? configFile : "/home/etud/Documents/Projet_Magic/backend/config.json");
 
     drogon::app().registerBeginningAdvice([] {
         auto db = drogon::app().getDbClient("default");
@@ -21,6 +26,6 @@ int main() {
             callback(response);
         }
     );
-    drogon::app().addListener("127.0.0.1", 8080);
+    drogon::app().addListener(listenAddr ? listenAddr : "127.0.0.1", 8080);
     drogon::app().run();
 }

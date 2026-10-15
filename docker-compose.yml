@@ -1,0 +1,40 @@
+name: projet-magic
+
+services:
+  # Compile (cmake) puis exécute le backend Drogon + CHR++ sur le port 8080.
+  backend:
+    build:
+      context: docker
+      dockerfile: backend.Dockerfile
+    environment:
+      CONFIG_FILE: /app/backend/config.json
+      LISTEN_ADDR: 0.0.0.0
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - ./backend:/app/backend
+      - ./data:/app/data
+      # Le dossier build/ de l'hôte contient un cache CMake incompatible : on l'écrase.
+      - backend-build:/app/backend/build
+
+  # Lance `npm run dev` (Vite) sur le port 5173 ; /api est relayé vers le backend.
+  # Les dépendances npm sont dans l'image. Si package.json change :
+  #   docker compose build frontend && docker compose down -v
+  frontend:
+    build:
+      context: frontend
+      dockerfile: ../docker/frontend.Dockerfile
+    command: npm run dev -- --host 0.0.0.0 --strictPort
+    environment:
+      API_TARGET: http://backend:8080
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - frontend-node-modules:/app/frontend/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  backend-build:
+  frontend-node-modules:
