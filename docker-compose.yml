@@ -1,40 +1,54 @@
 name: projet-magic
 
+# Aucun build d'image, aucune installation : les conteneurs utilisent la toolchain
+# de la machine hôte (g++, cmake, node, Drogon et chrppc dans /usr/local, ainsi que
+# frontend/node_modules). Le /usr de l'hôte est monté en lecture seule par-dessus
+# celui de l'image, qui ne sert que de squelette (/etc, /bin -> usr/bin...).
+# Le projet est monté au MÊME chemin que sur l'hôte : le cache CMake de backend/build
+# (qui contient des chemins absolus) est donc réutilisé tel quel.
+#
+# Prérequis : hôte Debian 13 comme l'image, et `docker compose` lancé depuis la
+# racine du projet (le chemin vient de $PWD).
+x-host-toolchain: &host-toolchain
+  image: debian:trixie-slim
+  # UID du premier utilisateur Linux : les fichiers créés (data/app.db, build/...)
+  # vous appartiennent.
+  user: "1000:1000"
+
 services:
-  # Compile (cmake) puis exécute le backend Drogon + CHR++ sur le port 8080.
+  # Compile (cmake, incrémental) puis exécute le backend Drogon + CHR++ sur le port 8080.
   backend:
-    build:
-      context: docker
-      dockerfile: backend.Dockerfile
+    <<: *host-toolchain
+    working_dir: ${PWD}/backend
+    entrypoint: ["sh", "../docker/backend-entrypoint.sh"]
     environment:
-      CONFIG_FILE: /app/backend/config.json
+      HOME: /tmp
+      CONFIG_FILE: ${PWD}/backend/config.json
       LISTEN_ADDR: 0.0.0.0
     ports:
       - "127.0.0.1:8080:8080"
     volumes:
-      - ./backend:/app/backend
-      - ./data:/app/data
-      # Le dossier build/ de l'hôte contient un cache CMake incompatible : on l'écrase.
-      - backend-build:/app/backend/build
+      - /usr:/usr:ro
+      - /etc/alternatives:/etc/alternatives:ro
+      - ./backend:${PWD}/backend
+      - ./docker:${PWD}/docker:ro
+      - ./data:${PWD}/data
 
   # Lance `npm run dev` (Vite) sur le port 5173 ; /api est relayé vers le backend.
-  # Les dépendances npm sont dans l'image. Si package.json change :
-  #   docker compose build frontend && docker compose down -v
+  # Utilise le node_modules déjà présent dans frontend/ (npm install sur l'hôte).
   frontend:
-    build:
-      context: frontend
-      dockerfile: ../docker/frontend.Dockerfile
+    <<: *host-toolchain
+    working_dir: ${PWD}/frontend
     command: npm run dev -- --host 0.0.0.0 --strictPort
     environment:
+      HOME: /tmp
+      NPM_CONFIG_UPDATE_NOTIFIER: "false"
       API_TARGET: http://backend:8080
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app/frontend
-      - frontend-node-modules:/app/frontend/node_modules
+      - /usr:/usr:ro
+      - /etc/alternatives:/etc/alternatives:ro
+      - ./frontend:${PWD}/frontend
     depends_on:
       - backend
-
-volumes:
-  backend-build:
-  frontend-node-modules:

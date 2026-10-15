@@ -1,15 +1,17 @@
 #!/bin/sh
 # Compile le backend (incrémental : seuls les fichiers modifiés) puis le lance.
+# Lancé depuis <projet>/backend (working_dir de docker-compose.yml), avec la
+# toolchain de l'hôte : rien n'est installé ni reconfiguré si le cache CMake existe.
 set -eu
 
-BUILD_DIR=/app/backend/build
+SRC_DIR=$(pwd)
+BUILD_DIR="$SRC_DIR/build"
 
-# Configuration cmake (vérification des dépendances) uniquement à la toute première
-# exécution ; ensuite `cmake --build` ne la refait que si un CMakeLists.txt change.
-[ -f "$BUILD_DIR/CMakeCache.txt" ] || cmake -S /app/backend -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="${BUILD_TYPE:-Debug}"
+# Configuration cmake uniquement si backend/build n'existe pas encore ; ensuite
+# `cmake --build` ne la refait que si un CMakeLists.txt change.
+[ -f "$BUILD_DIR/CMakeCache.txt" ] || cmake -S "$SRC_DIR" -B "$BUILD_DIR" -DCMAKE_BUILD_TYPE="${BUILD_TYPE:-Debug}"
 cmake --build "$BUILD_DIR" -j"$(nproc)"
 
-# Même disposition que sur la machine hôte : le répertoire courant doit être
-# backend/build pour que "../../data/app.db" (config.json) pointe vers data/.
-cd "$BUILD_DIR"
-exec ./backend
+# Le répertoire courant reste backend/ : les chemins relatifs de config.json
+# ("../data/app.db", "uploads", document_root "./") en dépendent.
+exec "$BUILD_DIR/backend"
