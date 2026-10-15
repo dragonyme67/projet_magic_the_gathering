@@ -27,7 +27,11 @@ endif ()
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_executable(${PROJECT_NAME} main.${DEFAULT_SOURCE_EXTENSION})
+add_executable(${PROJECT_NAME}
+    main.cc
+    controllers/HelloController.cc
+    controllers/CarteController.cc
+)
 
 # ##############################################################################
 # If you include the drogon source code locally in your project, use this method

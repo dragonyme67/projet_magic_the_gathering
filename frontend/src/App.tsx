@@ -5,10 +5,37 @@ interface Carte {
   rarete: string
 }
 
+interface message {
+  message: string
+}
+
 function App() {
+  const [message, setMessage] = useState<string>("")
   const [cartes, setCartes] = useState<Carte[]>([])
   const [erreur, setErreur] = useState<string | null>(null)
   const [chargement, setChargement] = useState(true)
+
+  async function sayHello() {
+    setChargement(true)
+    setErreur(null)
+    try {
+      const response = await fetch('/api/hello')
+
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`)
+      }
+
+      const data: message = await response.json()
+      setMessage(data.message)
+
+    } catch (error) {
+      setErreur(
+        error instanceof Error ? error.message : 'Erreur inconnue'
+      )
+    } finally {
+      setChargement(false)
+    }
+  }
 
   useEffect(() => {
     fetch('/api/cartes/test')
@@ -32,7 +59,10 @@ function App() {
   return (
     <main>
       <h1>Mon application</h1>
-      {chargement && <p>Chargement...</p>}
+      <button onClick={sayHello} disabled={chargement}>
+        {chargement ? 'Chargement...' : 'Contacter le serveur'}
+      </button>
+      {message && <p>Réponse du serveur : {message}</p>}
       {erreur && <p>Erreur : {erreur}</p>}
       {!chargement && !erreur && cartes.length === 0 && <p>Aucune carte.</p>}
       <ul>
