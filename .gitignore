@@ -2,3 +2,4 @@ build/
 .build
 node_modules/
 frontend/dist/
+data/*.db
