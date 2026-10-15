@@ -40,7 +40,7 @@
         {
             "name": "default",
             "rdbms": "sqlite3",
-            "filename": "../../data/app.db",
+            "filename": "../data/app.db",
             "connection_number": 1
         }
     ],/*
