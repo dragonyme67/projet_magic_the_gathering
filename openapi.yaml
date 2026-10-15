@@ -1,0 +1,24 @@
+
+openapi: 3.0.3
+
+info:
+  title: API Magic
+  version: 1.0.0
+
+paths:
+  /api/hello:
+    get:
+      summary: Récupérer un message du serveur
+      responses:
+        '200':
+          description: Message récupéré
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - message
+                properties:
+                  message:
+                    type: string
+                    example: Bonjour depuis Drogon !
