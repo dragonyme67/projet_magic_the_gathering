@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 interface Carte {
   nom: string
-  rarete: string
+  image: string
 }
 
 interface message {
@@ -59,19 +59,24 @@ function App() {
   return (
     <main>
       <h1>Mon application</h1>
-      <button onClick={sayHello} disabled={chargement}>
+      <button onClick={sayHello} disabled={chargement} className="btn-primary">
         {chargement ? 'Chargement...' : 'Contacter le serveur'}
       </button>
       {message && <p>Réponse du serveur : {message}</p>}
       {erreur && <p>Erreur : {erreur}</p>}
       {!chargement && !erreur && cartes.length === 0 && <p>Aucune carte.</p>}
-      <ul>
-        {cartes.map((carte) => (
-          <li key={carte.nom}>
-            {carte.nom} ({carte.rarete})
-          </li>
-        ))}
-      </ul>
+      <div className="grid grid-cols-4 gap-4">
+      {cartes.map((carte) => (
+        <div key={carte.nom} className="text-center">
+          <img
+            src={carte.image}
+            alt={carte.nom}
+            className="mx-auto w-full max-w-[200px]"
+          />
+          <p className="font-semibold">{carte.nom}</p>
+        </div>
+      ))}
+    </div>
     </main>
   )
 }

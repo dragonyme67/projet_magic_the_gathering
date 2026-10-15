@@ -6,6 +6,38 @@ info:
   version: 1.0.0
 
 paths:
+  /api/cartes:
+    get:
+      summary: Récupérer quelques cartes de test
+      responses:
+        '200':
+          description: Liste des cartes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - nom
+                    - rarete
+                  properties:
+                    nom:
+                      type: string
+                      example: Chandra
+                    rarete:
+                      type: string
+                      example: Mythique
+        '500':
+          description: Erreur lors de la récupération des cartes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
   /api/hello:
     get:
       summary: Récupérer un message du serveur
