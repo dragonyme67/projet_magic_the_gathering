@@ -8,18 +8,17 @@
 
 namespace {
 
-// Texte d'une colonne de la requête ; chaîne vide si la valeur est NULL.
+// "" si NULL
 std::string colonne(sqlite3_stmt* requete, int numero) {
     const unsigned char* texte = sqlite3_column_text(requete, numero);
     if (texte == nullptr) return "";
     return reinterpret_cast<const char*>(texte);
 }
 
-}  // namespace
+}
 
 magic::Catalogue chargerCatalogue(const std::string& baseSqlite) {
-    // Ouverture en lecture seule : si le fichier n'existe pas, on a une erreur
-    // (sinon SQLite créerait une base vide).
+    // lecture seule : sinon SQLite crée une base vide si le fichier manque
     sqlite3* base = nullptr;
     if (sqlite3_open_v2(baseSqlite.c_str(), &base, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK) {
         const std::string message = "Impossible d'ouvrir la base " + baseSqlite + " : " + sqlite3_errmsg(base);
@@ -37,7 +36,6 @@ magic::Catalogue chargerCatalogue(const std::string& baseSqlite) {
         throw std::runtime_error(message);
     }
 
-    // Une ligne de la table = une carte.
     magic::Catalogue catalogue;
     while (sqlite3_step(requete) == SQLITE_ROW) {
         magic::Carte carte;
@@ -70,7 +68,7 @@ std::vector<magic::Deck> chargerDecks(const std::string& fichierJson, const magi
         throw std::runtime_error(fichierJson + " : JSON invalide : " + erreurs);
     }
 
-    const Json::Value& racine = lue;  // lecture seule : operator[] ne crée aucune clé
+    const Json::Value& racine = lue;  // const : operator[] ne crée pas de clé
     if (!racine.isObject() || !racine["joueurs"].isArray() || racine["joueurs"].size() != 2) {
         throw std::runtime_error(fichierJson + " : \"joueurs\" doit être un tableau de exactement 2 joueurs.");
     }

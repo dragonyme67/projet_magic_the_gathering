@@ -5,10 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Bibliothèque du moteur de jeu. Aucune dépendance (ni Drogon, ni SQLite, ni jsoncpp) :
-# le backend la liera plus tard avec
-#   add_subdirectory(../moteur moteur)
-#   target_link_libraries(backend PRIVATE magic_core)
+# Moteur seul : sans Drogon, SQLite ni jsoncpp
 add_library(magic_core STATIC
     src/Catalogue.cpp
     src/Etat.cpp
@@ -20,8 +17,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_compile_options(magic_core PRIVATE -Wall -Wextra)
 endif()
 
-# Console de jeu : lit les cartes dans la base SQLite et les decks dans un fichier JSON.
-# Ignorée (avec un message) si sqlite3 ou jsoncpp manquent : la bibliothèque se compile quand même.
+# Console (optionnelle : demande sqlite3 et jsoncpp)
 find_package(PkgConfig QUIET)
 if(PkgConfig_FOUND)
     pkg_check_modules(SQLITE3 IMPORTED_TARGET sqlite3)

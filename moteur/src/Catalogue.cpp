@@ -5,7 +5,7 @@
 namespace magic {
 
 void Catalogue::ajouter(const Carte& carte) {
-    cartes_[carte.id] = carte;  // remplace la carte si l'id existe déjà
+    cartes_[carte.id] = carte;
 }
 
 const Carte* Catalogue::trouver(const std::string& id) const {
@@ -34,4 +34,4 @@ Deck construireDeck(const Catalogue& catalogue, const std::string& joueur,
     return deck;
 }
 
-}  // namespace magic
+}

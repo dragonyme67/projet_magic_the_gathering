@@ -14,14 +14,13 @@ namespace magic {
 
 struct Resultat {
     bool accepte = false;
-    std::string refus;                  // raison du refus, vide si accepté
-    std::vector<Evenement> evenements;  // ce que cette action a produit
+    std::string refus;  // vide si accepté
+    std::vector<Evenement> evenements;
 };
 
-// Une partie en cours : l'état, le journal, l'arbitre. Game en crée une à chaque lancement.
 class Partie {
 public:
-    // Un joueur par deck. Même graine = même mélange.
+    // un joueur par deck ; même graine = même mélange
     Partie(const std::vector<Deck>& decks, unsigned graine,
            std::unique_ptr<Arbitre> arbitre = std::make_unique<ArbitrePermissif>(),
            int mainInitiale = 7);
@@ -32,7 +31,7 @@ public:
     const std::vector<Evenement>& journal() const { return journal_; }
 
 private:
-    // Fait l'action. Renvoie la raison du refus, ou une chaîne vide si elle a été faite.
+    // "" = fait, sinon la raison du refus
     std::string executer(JoueurId joueur, const Action& action);
     std::string executerPiocher(JoueurId joueur);
     std::string executerDeplacer(JoueurId joueur, const Action& action);
@@ -40,11 +39,9 @@ private:
     std::string executerChangerVie(const Action& action);
     std::string executerFinDuTour(JoueurId joueur);
 
-    // Ajoute une ligne au journal et renvoie son id.
     int noter(const std::string& regle, const std::string& texte, int cause = -1);
 
-    // Générateur de nombres pseudo-aléatoires propre à la partie (même graine, mêmes tirages).
-    int tirer(int max);  // entier entre 0 et max - 1 (max doit rester sous 65536)
+    int tirer(int max);  // 0 .. max-1, max < 65536
     void melanger(std::vector<ObjetId>& cartes);
 
     Etat etat_;
@@ -53,4 +50,4 @@ private:
     unsigned int hasard_;
 };
 
-}  // namespace magic
+}

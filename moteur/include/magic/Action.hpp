@@ -4,16 +4,9 @@
 
 namespace magic {
 
-// Pour ajouter une action : une valeur ici, un champ dans Action si besoin, une fonction
-// statique pour la créer, puis un cas dans Partie::executer (le compilateur prévient si on
-// l'oublie).
 enum class TypeAction { Piocher, Deplacer, Engager, Degager, ChangerVie, FinDuTour };
 
-// Ce qu'un joueur demande. Chaque type n'utilise que certains champs :
-//   Deplacer          : objet, zone (destination)
-//   Engager / Degager : objet
-//   ChangerVie        : cible (le joueur qui gagne ou perd de la vie), delta
-// On crée une action avec les fonctions ci-dessous, par exemple Action::deplacer(12, Zone::Main).
+// Champs utilisés : Deplacer (objet, zone) · Engager/Degager (objet) · ChangerVie (cible, delta)
 struct Action {
     TypeAction type = TypeAction::Piocher;
     ObjetId objet = kAucunObjet;
@@ -59,4 +52,4 @@ struct Action {
     }
 };
 
-}  // namespace magic
+}

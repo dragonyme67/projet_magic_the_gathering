@@ -15,7 +15,6 @@ struct NomDeZone {
     Zone zone;
 };
 
-// Façons d'écrire une zone dans une commande.
 const NomDeZone kNomsDeZones[] = {
     {"bibliotheque", Zone::Bibliotheque}, {"bibliothèque", Zone::Bibliotheque}, {"biblio", Zone::Bibliotheque},
     {"main", Zone::Main},
@@ -32,14 +31,14 @@ std::string minuscules(std::string texte) {
     return texte;
 }
 
-// Convertit un texte en entier. Renvoie faux si ce n'est pas un nombre (« 12x » est refusé).
+// « 12x » refusé
 bool lireEntier(const std::string& texte, int& valeur) {
     std::istringstream flux(texte);
     char reste;
     return (flux >> valeur) && !(flux >> reste);
 }
 
-// Renvoie Zone::Nombre si le nom est inconnu.
+// Zone::Nombre si inconnue
 Zone zoneNommee(const std::string& texte) {
     const std::string cle = minuscules(texte);
     for (const NomDeZone& n : kNomsDeZones) {
@@ -48,8 +47,7 @@ Zone zoneNommee(const std::string& texte) {
     return Zone::Nombre;
 }
 
-// Un joueur se désigne par son nom (majuscules ignorées) ou par son rang : 1, 2.
-// Renvoie -1 si on ne le trouve pas.
+// nom ou rang (1, 2) ; -1 si introuvable
 JoueurId joueurNomme(const Etat& etat, const std::string& texte) {
     int rang = 0;
     if (lireEntier(texte, rang)) {
@@ -62,13 +60,13 @@ JoueurId joueurNomme(const Etat& etat, const std::string& texte) {
     return -1;
 }
 
-// Informations cachées : les bibliothèques et la main de l'adversaire.
+// cachées : bibliothèques et main de l'adversaire
 bool zoneCachee(const Etat& etat, JoueurId proprietaire, Zone zone) {
     if (zone == Zone::Bibliotheque) return true;
     return zone == Zone::Main && proprietaire != etat.joueurActif;
 }
 
-}  // namespace
+}
 
 Console::Console(Game& jeu) : jeu_(jeu) {}
 
@@ -85,9 +83,8 @@ void Console::run() {
     while (true) {
         const Etat& etat = jeu_.etat();
         std::cout << '\n' << etat.joueurs[etat.joueurActif].nom << "> " << std::flush;
-        if (!std::getline(std::cin, ligne)) break;  // fin de l'entrée (Ctrl+D)
+        if (!std::getline(std::cin, ligne)) break;  // Ctrl+D
 
-        // On découpe la ligne en mots : le premier est la commande, les autres les arguments.
         std::istringstream flux(ligne);
         std::string commande;
         flux >> commande;
@@ -121,8 +118,6 @@ bool Console::traiter(const std::string& commande, const std::vector<std::string
 
     return true;
 }
-
-// --- Une fonction par commande ---------------------------------------------------
 
 void Console::jouer(const std::vector<std::string>& args) {
     if (!argumentsSuffisants(args, 1, "jouer <id>")) return;
@@ -162,7 +157,7 @@ void Console::vie(const std::vector<std::string>& args) {
     }
 
     const Etat& etat = jeu_.etat();
-    JoueurId cible = etat.joueurActif;  // par défaut : le joueur dont c'est le tour
+    JoueurId cible = etat.joueurActif;
     if (args.size() > 1) {
         cible = joueurNomme(etat, args[1]);
         if (cible < 0) {
@@ -209,7 +204,7 @@ void Console::voir(const std::vector<std::string>& args) {
 }
 
 void Console::journal(const std::vector<std::string>& args) {
-    int voulu = 10;  // nombre d'événements à montrer
+    int voulu = 10;
     if (!args.empty() && !lireEntier(args[0], voulu)) {
         std::cout << "Nombre invalide : " << args[0] << '\n';
         return;
@@ -223,8 +218,6 @@ void Console::journal(const std::vector<std::string>& args) {
         std::cout << "  [" << evenements[i].id << "] " << evenements[i].texte << '\n';
     }
 }
-
-// --- Outils ----------------------------------------------------------------------
 
 void Console::appliquer(const Action& action) {
     const JoueurId joueur = jeu_.etat().joueurActif;

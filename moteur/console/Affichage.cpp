@@ -36,7 +36,7 @@ void afficherJoueur(std::ostream& sortie, const Etat& etat, JoueurId id) {
     }
 }
 
-}  // namespace
+}
 
 void afficherEtat(std::ostream& sortie, const Etat& etat) {
     sortie << "\n══════ Tour " << etat.tour << " · au tour de " << etat.joueurs[etat.joueurActif].nom

@@ -1,6 +1,4 @@
-// Console de jeu : on joue une partie sans règles à la main, les deux joueurs sur le même clavier.
-//
-//   console_moteur [decks.json] [database.sqlite] [graine]     (à lancer depuis la racine du projet)
+// Usage : console_moteur [decks.json] [database.sqlite] [graine]  (depuis la racine du projet)
 
 #include <iostream>
 #include <sstream>
@@ -18,7 +16,6 @@ int main(int argc, char** argv) {
         if (argc > 1) fichierDecks = argv[1];
         if (argc > 2) baseCartes = argv[2];
 
-        // La console charge les cartes et les decks, puis donne le tout à Game.
         magic::Catalogue catalogue = chargerCatalogue(baseCartes);
         std::vector<magic::Deck> decks = chargerDecks(fichierDecks, catalogue);
         magic::Game jeu(catalogue, decks);

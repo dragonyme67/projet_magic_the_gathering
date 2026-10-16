@@ -34,7 +34,6 @@ void Etat::deplacer(ObjetId id, Zone destination) {
     Objet& objet = objets.at(id);
     Joueur& proprietaire = joueurs.at(objet.proprietaire);
 
-    // On retire l'objet de son ancienne zone...
     std::vector<ObjetId>& origine = proprietaire.zone(objet.zone);
     const int taille = origine.size();
     for (int i = 0; i < taille; ++i) {
@@ -44,10 +43,9 @@ void Etat::deplacer(ObjetId id, Zone destination) {
         }
     }
 
-    // ... et on l'ajoute à la nouvelle.
     proprietaire.zone(destination).push_back(id);
     objet.zone = destination;
-    objet.engage = false;  // changer de zone dégage la carte
+    objet.engage = false;  // changer de zone dégage
 }
 
 ObjetId Etat::piocher(JoueurId joueur) {
@@ -72,4 +70,4 @@ void Etat::finDuTour() {
     ++tour;
 }
 
-}  // namespace magic
+}

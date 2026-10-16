@@ -14,7 +14,7 @@ void Game::lancer() {
 
 void Game::lancer(unsigned graine) {
     graine_ = graine;
-    partie_ = std::make_unique<Partie>(decks_, graine_);  // remplace l'éventuelle partie en cours
+    partie_ = std::make_unique<Partie>(decks_, graine_);
 }
 
 void Game::terminer() {
@@ -44,4 +44,4 @@ void Game::exigerPartie() const {
     if (!enCours()) throw std::runtime_error("Aucune partie en cours.");
 }
 
-}  // namespace magic
+}

@@ -7,14 +7,12 @@ namespace magic {
 Partie::Partie(const std::vector<Deck>& decks, unsigned graine,
                std::unique_ptr<Arbitre> arbitre, int mainInitiale)
     : arbitre_(std::move(arbitre)), hasard_(graine) {
-    // Un joueur par deck.
     for (const Deck& deck : decks) {
         Joueur joueur;
         joueur.nom = deck.joueur;
         etat_.joueurs.push_back(joueur);
     }
 
-    // Pour chaque joueur : ses cartes en bibliothèque, mélange, main de départ.
     for (JoueurId id = 0; id < etat_.nbJoueurs(); ++id) {
         for (const Carte& carte : decks[id].cartes) {
             etat_.creerObjet(std::make_shared<const Carte>(carte), id, Zone::Bibliotheque);
@@ -39,7 +37,6 @@ Resultat Partie::appliquer(JoueurId joueur, const Action& action) {
         return resultat;
     }
 
-    // L'arbitre d'abord, puis l'exécution. Une chaîne vide veut dire « pas de refus ».
     std::string refus = arbitre_->valider(etat_, joueur, action);
     if (refus.empty()) refus = executer(joueur, action);
     if (!refus.empty()) {
@@ -55,9 +52,7 @@ Resultat Partie::appliquer(JoueurId joueur, const Action& action) {
     return resultat;
 }
 
-// --- Actions -----------------------------------------------------------------
-// Pour l'instant chaque action appelle directement une opération de Etat, sans règle.
-// Les règles viendront s'insérer ici (ou dans l'Arbitre) sans changer le reste.
+// --- Actions (sans règle : appel direct des opérations de Etat) ---
 
 std::string Partie::executer(JoueurId joueur, const Action& action) {
     switch (action.type) {
@@ -131,19 +126,16 @@ int Partie::noter(const std::string& regle, const std::string& texte, int cause)
     return evenement.id;
 }
 
-// --- Hasard ------------------------------------------------------------------
-// Petit générateur (congruence linéaire) : à chaque appel, hasard_ est remplacé par un nouveau
-// grand nombre qui paraît aléatoire mais qui ne dépend que de la graine. On garde les 16 bits
-// du haut, car ceux du bas sont peu aléatoires. On ne se sert pas de rand() : il est partagé
-// par tout le programme, donc deux parties simultanées (Drogon) se perturberaient.
+// --- Hasard ---
+// Congruence linéaire 32 bits (dépassement voulu), on garde les 16 bits hauts.
+// Pas de rand() : global, deux parties simultanées se perturberaient.
 
 int Partie::tirer(int max) {
-    hasard_ = hasard_ * 1664525u + 1013904223u;  // le dépassement d'un unsigned est permis : le nombre « reboucle »
+    hasard_ = hasard_ * 1664525u + 1013904223u;
     return (hasard_ >> 16) % max;
 }
 
-// Mélange de Fisher-Yates : on parcourt de la fin au début et on échange chaque carte avec
-// une carte tirée au hasard parmi celles qui précèdent (elle-même incluse).
+// Fisher-Yates
 void Partie::melanger(std::vector<ObjetId>& cartes) {
     const int taille = cartes.size();
     for (int i = taille - 1; i > 0; --i) {
@@ -154,4 +146,4 @@ void Partie::melanger(std::vector<ObjetId>& cartes) {
     }
 }
 
-}  // namespace magic
+}

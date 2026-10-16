@@ -80,10 +80,7 @@ target_sources(${PROJECT_NAME}
                ${MODEL_SRC})
 
 # ##############################################################################
-# Moteur de jeu (dossier ../moteur) : bibliothèque magic_core, sans dépendance à Drogon.
-# main.cc peut ensuite faire #include "magic/Game.hpp".
-# EXCLUDE_FROM_ALL : on ne compile du moteur que ce dont le backend a besoin
-# (pas la console, qui demande sqlite3 et jsoncpp).
+# Moteur de jeu (EXCLUDE_FROM_ALL : sans la console)
 add_subdirectory(../moteur moteur EXCLUDE_FROM_ALL)
 target_link_libraries(${PROJECT_NAME} PRIVATE magic_core)
 

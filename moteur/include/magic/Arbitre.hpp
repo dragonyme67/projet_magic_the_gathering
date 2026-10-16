@@ -7,13 +7,12 @@
 
 namespace magic {
 
-// Point d'insertion des règles du jeu : Partie demande à l'arbitre avant d'exécuter une action.
-// Aujourd'hui tout est permis (ArbitrePermissif). Plus tard, un arbitre basé sur les règles CHR++.
+// Point d'insertion des règles (pour l'instant : tout est permis)
 class Arbitre {
 public:
     virtual ~Arbitre() = default;
 
-    // Renvoie la raison du refus, ou une chaîne vide si l'action est autorisée.
+    // "" = autorisé, sinon la raison du refus
     virtual std::string valider(const Etat& etat, JoueurId joueur, const Action& action) const = 0;
 };
 
@@ -22,4 +21,4 @@ public:
     std::string valider(const Etat&, JoueurId, const Action&) const override { return ""; }
 };
 
-}  // namespace magic
+}
