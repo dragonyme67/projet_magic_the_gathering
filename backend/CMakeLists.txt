@@ -29,7 +29,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(${PROJECT_NAME}
     main.cc
-    controllers/HelloController.cc
+    controllers/CarteController.cc
     controllers/CarteController.cc
 )
 
