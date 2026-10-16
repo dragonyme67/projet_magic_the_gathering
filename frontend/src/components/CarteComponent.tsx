@@ -6,13 +6,15 @@ interface CarteComponentProps {
 
 function CarteComponent({ nom, image }: CarteComponentProps) {
   return (
-    <div className="text-center">
+    <div className="h-full w-full min-h-0 min-w-0 overflow-hidden">
       <img
         src={image}
         alt={nom}
-        className="mx-auto w-full max-w-[200px]"
+        className="block h-full w-full object-contain rounded-2xl"
       />
-      <p className="font-semibold">{nom}</p>
+      {/* <p className="max-w-full truncate text-center text-sm font-semibold">
+        {nom}
+      </p> */}
     </div>
   );
 }
