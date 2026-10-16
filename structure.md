@@ -7,8 +7,8 @@ Jeu de Magic: The Gathering en ligne, limité au set Kaladesh (~264 cartes), don
 Oui. Le backend est **un seul exécutable, un seul processus** (`backend/build/backend`). Le cahier des charges le dit (« Drogon appelle directement le moteur de jeu »), et le schéma d'architecture les place dans la même boîte « Backend C++ ».
 
 - `chrppc` compile les fichiers `.chrpp` en C++ : les règles sont du code C++ lié à l'exécutable, sans interpréteur ni processus externe.
-- Le moteur est une **bibliothèque statique `magic_core` qui ne dépend pas de Drogon**. Drogon (contrôleurs, JSON, HTTP) vit à l'extérieur et appelle `magic_core` par de simples appels de fonction.
-- Intérêt de cette séparation : on teste le moteur sans serveur (`backend/test`), et on peut le brancher sur une console si besoin.
+- Le moteur est une **bibliothèque statique `magic_core` qui ne dépend pas de Drogon**, dans le dossier `moteur/` (projet CMake indépendant, voir « Squelette actuel »). Drogon (contrôleurs, JSON, HTTP) vit à l'extérieur et appelle `magic_core` par de simples appels de fonction.
+- Intérêt de cette séparation : on essaie le moteur sans serveur (`moteur/console`), et `backend/` n'a pas à changer tant que le moteur n'est pas branché.
 - Conséquences : une partie vit en mémoire (perdue au redémarrage, acceptable pour la v1), et une exception non rattrapée dans le moteur fait tomber le serveur. Les contrôleurs rattrapent donc toutes les exceptions et répondent en 500.
 
 ## Vue d'ensemble
@@ -31,7 +31,7 @@ Oui. Le backend est **un seul exécutable, un seul processus** (`backend/build/b
                                                        │   Plugin Drogon : charge au démarrage │
                                                        └───────────────────┼───────────────────┘
                                                                            │ lecture seule
-                                                                    data/app.db (SQLite)
+                                                                    data/database.sqlite (SQLite)
 ```
 
 ## Données : de Scryfall au moteur
@@ -41,26 +41,89 @@ Oui. Le backend est **un seul exécutable, un seul processus** (`backend/build/b
  ─────────────────────                                         ───────────────────────
  Scryfall API ─► utils/card_import.py ─► resources/kld.json
                                               │
-                          utils/card_json_to_db (C++) ─► data/app.db      MoteurPlugin::initAndStart()
+                          utils/card_json_to_db (C++) ─► data/database.sqlite  MoteurPlugin::initAndStart()
                                                               │   SELECT * FROM Cartes
                                                               └──────────────► Catalogue (en mémoire,
                                                                                lecture seule ensuite)
  data/decks.json (config, à modifier) ──── relu à chaque création de partie ──► Deck par joueur
 ```
 
-- `data/app.db` n'est **pas versionné** (`.gitignore : data/*.db`) : après un clone, il faut relancer `card_import.py` puis `card_json_to_db`. Au moment où j'écris ce document, il est vide (0 carte).
+- `data/database.sqlite` est la base utilisée par Drogon (`backend/config.json`) et celle que remplit `card_json_to_db` (274 cartes de Kaladesh, 264 `oracle_id`). Elle est versionnée ; `data/app.db` (ignoré par git) est un ancien fichier vide, à supprimer.
 - La table `Cartes` (voir `data/schema.sql`) contient une ligne par impression et par langue. Le `Catalogue` regroupe les lignes par `oracle_id` : le **texte oracle EN** sert aux règles, le **texte FR** à l'affichage.
 - Après le chargement, la base n'est plus lue pendant les parties (cahier des charges : « lue au démarrage puis gardée en mémoire »).
 
-## Arborescence du backend
+## Squelette actuel du moteur (`moteur/`)
 
-`[existe]` = déjà dans le dépôt, `[à créer]` = cible.
+Étape en cours : un moteur à 2 joueurs **sans aucune règle** (tout est permis), séparé de Drogon, qu'on peut **jouer à la main dans la console**. Il ne sait que déplacer des cartes entre zones, engager, changer la vie et passer le tour.
+
+```
+moteur/
+├── CMakeLists.txt             bibliothèque magic_core + console_moteur
+├── include/magic/
+│   ├── Carte.hpp              Carte (colonnes utiles de la table Cartes, FR + EN) et Deck
+│   ├── Catalogue.hpp          Catalogue (id → Carte, rempli par l'appelant) et construireDeck(ids)
+│   ├── Etat.hpp               Joueur, Objet, Zone, Etat + primitives (deplacer, piocher, engager…)
+│   ├── Action.hpp             std::variant : Piocher, Deplacer, Engager, ChangerVie, FinDuTour
+│   ├── Evenement.hpp          ligne du journal (id, cause, règle, texte) : base des explications
+│   ├── Arbitre.hpp            interface valider(etat, joueur, action) + ArbitrePermissif
+│   └── Partie.hpp             façade : Partie(decks, graine), appliquer(joueur, action) → Resultat
+├── src/Catalogue.cpp, Etat.cpp, Partie.cpp
+└── console/                   jeu en console (seule partie qui dépend de SQLite et jsoncpp)
+    ├── main.cpp               boucle de commandes → Action → Partie::appliquer
+    ├── Chargeurs.{hpp,cpp}    base SQLite → Catalogue ; fichier de decks JSON → Deck
+    └── Affichage.{hpp,cpp}    rendu de l'état, d'une zone, d'une carte
+
+data/decks.json                decks des 2 joueurs (ids de la table Cartes)
+```
+
+```
+ Action ──► Partie::appliquer ──► Arbitre::valider ──refus──► Resultat{accepte=false, refus}
+                                         │ ok
+                                         ▼
+                              Partie::executer(action)  ──► primitives de Etat (deplacer, piocher…)
+                                         │
+                                         └──► journal (Evenement) ──► Resultat{accepte=true, evenements}
+```
+
+Trois idées à garder quand on ajoutera les règles :
+
+- **`Etat` est une valeur** (copiable, sans pointeur externe) : retour arrière et sérialisation JSON faciles. Ses méthodes sont les **primitives** que les règles appelleront ; elles ne vérifient que la cohérence (id valide).
+- **`Arbitre` est le point d'insertion des règles** : aujourd'hui `ArbitrePermissif`, demain un arbitre CHR++. `Partie` ne change pas.
+- **Une `Carte` est immuable, un `Objet` est un exemplaire en jeu** (zone, engagé…) qui la référence : plusieurs exemplaires d'une même carte sont possibles.
+
+Ajouter une action : une struct dans `Action.hpp`, l'ajouter au `std::variant`, écrire la surcharge `Partie::executer` (sans elle, le code ne compile pas), puis la commande correspondante dans `console/main.cpp`. Ajouter une zone : une valeur dans `Zone` et son nom dans `Etat.cpp`.
+
+### Fichier de decks (`data/decks.json`)
+
+Exactement 2 joueurs ; chaque carte est désignée par son **`id` de la table `Cartes`** (id Scryfall de l'impression : `SELECT id, nom_imprime FROM Cartes`). `quantite` vaut 1 par défaut ; les autres clés (ici `nom`) sont ignorées et ne servent qu'à relire le fichier.
+
+```json
+{ "joueurs": [
+    { "nom": "Alice", "cartes": [ { "id": "6d1a0776-859d-4dda-accf-53500fea19a8", "quantite": 9, "nom": "Plaine" } ] },
+    { "nom": "Bob",   "cartes": [ { "id": "a5affb42-c7af-4216-a3c3-35d261d4b4ea", "quantite": 9, "nom": "Montagne" } ] }
+] }
+```
+
+### Jouer en console
+
+```
+cmake -S moteur -B moteur/build && cmake --build moteur/build
+./moteur/build/console_moteur [data/decks.json] [data/database.sqlite] [graine]     # depuis la racine
+```
+
+Les deux joueurs jouent sur le même clavier ; les commandes (`piocher`, `jouer <id>`, `deplacer <id> <zone>`, `engager`, `degager`, `vie <n> [joueur]`, `fin`, `carte <id>`, `voir <zone>`, `journal`, `aide`, `quitter`) s'appliquent au joueur dont c'est le tour. La main de l'adversaire et les bibliothèques sont masquées.
+
+Volontairement absents pour l'instant : phases du tour, pile, contrôleur, mana, combat, conditions de victoire, mise en JSON.
+
+## Arborescence du backend (cible)
+
+`[existe]` = déjà dans le dépôt, `[à créer]` = cible. Le sous-dossier `core/` ci-dessous est la **découpe visée pour le moteur quand les règles et les explications arriveront** ; son contenu actuel est le squelette de `moteur/` ci-dessus.
 
 ```
 backend/
 ├── main.cc                      [existe]  config, enregistrement du plugin, listener, run
 ├── CMakeLists.txt               [existe]  + add_subdirectory(core), lien avec magic_core
-├── config.json                  [existe]  db_clients (sqlite ../data/app.db), listeners
+├── config.json                  [existe]  db_clients (sqlite ../data/database.sqlite), listeners
 ├── models/                      [existe]  ORM Drogon généré pour Cartes (optionnel)
 │
 ├── controllers/                 [à créer] couche HTTP mince : parse, appelle, sérialise
@@ -94,9 +157,9 @@ backend/
 │       ├── Journal.{h,cc}       Evenement + chaîne de causes
 │       └── Explicateur.{h,cc}   règle + paramètres → phrase FR (gabarits)
 │
-└── test/                        [existe]  test_main.cc ; ajouter un scénario par règle/carte
+└── test/                        [existe]  test_main.cc (Drogon)
 
-data/schema.sql, data/app.db, data/decks.json        [schema.sql existe ; decks.json à créer]
+data/schema.sql, data/database.sqlite, data/decks.json   [schema.sql et database.sqlite existent ; decks.json à créer]
 utils/card_import.py, utils/card_json_to_db.cpp      [existent]
 frontend/                                            [existe] React + TS + Vite (+ Tailwind à ajouter)
 ```
@@ -286,7 +349,7 @@ Drogon traite les requêtes sur plusieurs threads. Règles à respecter :
 | une carte | `core/regles/kaladesh/<carte>.chrpp`, enregistrée par `oracle_id` dans `Registre` + test | `Catalogue`, base de données |
 | un deck | `data/decks.json` | tout le reste (relu à la création de partie) |
 
-Garde-fous : une carte absente de `Registre` est **signalée « non implémentée »** (refus explicite, pas d'effet silencieusement ignoré), `core/CMakeLists.txt` récupère les `.chrpp` par `file(GLOB … CONFIGURE_DEPENDS)`, et chaque règle ou carte vient avec un scénario « faits initiaux → faits attendus » dans `backend/test`.
+Garde-fous : une carte absente de `Registre` est **signalée « non implémentée »** (refus explicite, pas d'effet silencieusement ignoré), `core/CMakeLists.txt` récupère les `.chrpp` par `file(GLOB … CONFIGURE_DEPENDS)`, et chaque règle ou carte vient avec un scénario « faits initiaux → faits attendus » dans un dossier de tests (à créer).
 
 Question ouverte : décrire les effets simples par des **données** (briques génériques `piocher(N)`, `creer_jeton(X)`…, sans recompiler) ou écrire **un `.chrpp` par carte**. Le plan ci-dessus part sur un `.chrpp` par carte ; la voie « données » peut s'ajouter plus tard pour les cartes simples.
 
@@ -300,15 +363,15 @@ C++17/20 (celui détecté par le `CMakeLists.txt` généré par Drogon) · CMake
 sudo apt install libjsoncpp-dev
 python3 utils/card_import.py kld                      # → resources/kld.json
 g++ utils/card_json_to_db.cpp -o utils/card_json_to_db $(pkg-config --cflags --libs sqlite3 jsoncpp)
-./utils/card_json_to_db …                             # → data/app.db  (voir l'usage dans le fichier)
+./utils/card_json_to_db …                             # → data/database.sqlite  (chemin écrit en dur dans le fichier)
 docker compose up -d                                   # front :5173, back :8080
 ```
 
 ## Étapes
 
-1. Base de cartes : import Scryfall → SQLite ← *fait* ; `Catalogue` + `MoteurPlugin` (chargement au démarrage)
-2. `magic_core` : `Etat`, `Partie::creer`, decks depuis `data/decks.json`, **prototype CHR++** (accès à `Etat`, une règle de validation + une règle d'effet)
-3. Règles de base : tours, phases, pile, jouer un terrain, lancer un sort, actions basées sur l'état
-4. Journal et explications (`cause`, `Explicateur`, gabarits)
-5. Routes Drogon, schémas JSON, front (suivi de partie)
+1. Base de cartes : import Scryfall → SQLite ← *fait*
+2. **Squelette du moteur à 2 joueurs, sans règle** (`moteur/`) ← *fait*
+3. **Partie sans règles de bout en bout** : brancher `magic_core` dans Drogon (`add_subdirectory(../moteur)`), `EtatJson`/`ActionJson`, routes `/api/parties…`, `Catalogue` chargé depuis SQLite pour construire les decks, page de partie dans le front
+4. Prototype CHR++ : un `ArbitreChr` (une règle de validation + une règle d'effet) derrière l'interface `Arbitre`
+5. Règles de base (tours, phases, pile, terrains, sorts, actions basées sur l'état), puis journal et explications (`cause`, `Explicateur`)
 6. Mécaniques Kaladesh : énergie, véhicules et pilotage, fabrication ; puis les cartes par lots

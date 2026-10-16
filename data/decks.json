@@ -1,0 +1,264 @@
+{
+  "joueurs": [
+    {
+      "nom": "Alice",
+      "cartes": [
+        {
+          "id": "cb75305e-15c9-43f2-9efa-6dc3912b2b66",
+          "quantite": 1,
+          "nom": "Module d'animation"
+        },
+        {
+          "id": "a3888589-cebd-4aec-8690-fce0b3a9f0b5",
+          "quantite": 1,
+          "nom": "Fragmentation"
+        },
+        {
+          "id": "d018bc3d-8013-4c80-a5ca-fd4dc7b0b547",
+          "quantite": 1,
+          "nom": "Tortue prospère"
+        },
+        {
+          "id": "b553a5dd-ddd2-4335-8da7-610e8e9ce594",
+          "quantite": 1,
+          "nom": "Porte aérienne du consulat"
+        },
+        {
+          "id": "f22a2f10-3735-43cb-83a6-8f0841800df2",
+          "quantite": 1,
+          "nom": "Faucon des courants"
+        },
+        {
+          "id": "e2dd6c17-2356-4604-b6ae-42fde1918a61",
+          "quantite": 1,
+          "nom": "Grue au nid étincelant"
+        },
+        {
+          "id": "d7db40c8-654a-44b8-a8bf-79b151f0820a",
+          "quantite": 1,
+          "nom": "Sablier perpétuel"
+        },
+        {
+          "id": "a7b07dc5-dd6e-4e2d-8405-88c6ada0d11f",
+          "quantite": 1,
+          "nom": "Exhibition de servos"
+        },
+        {
+          "id": "8e5bf5bc-54c9-4a58-aed0-6425f24b4aba",
+          "quantite": 1,
+          "nom": "Casse-tête du tisseur de bois"
+        },
+        {
+          "id": "3578794b-c8c3-4247-8ffc-b2909ff1db6c",
+          "quantite": 1,
+          "nom": "Piège sans issue"
+        },
+        {
+          "id": "d8b4f5a2-409e-481c-9e68-2b8a6856c99d",
+          "quantite": 1,
+          "nom": "Garde de la foire"
+        },
+        {
+          "id": "0bdea2b4-5e09-4a56-bdc0-1b2e6cef861c",
+          "quantite": 1,
+          "nom": "Sentinelle de Janjeet"
+        },
+        {
+          "id": "c45ed76b-98c4-466d-836b-4f8d03d2ccce",
+          "quantite": 1,
+          "nom": "Maître d'épée vedalken"
+        },
+        {
+          "id": "f40fb17d-ce13-4fe9-b887-79062d8c8c3c",
+          "quantite": 1,
+          "nom": "Réservoir de flux éthérique"
+        },
+        {
+          "id": "4ecee8ae-2ddf-46c8-8626-471dd523e460",
+          "quantite": 1,
+          "nom": "Gardebouclier du consul"
+        },
+        {
+          "id": "1cbc31d9-317f-4a64-9ba6-b6e0c6a9afd4",
+          "quantite": 1,
+          "nom": "Planétaire mécanique de Ghirapur"
+        },
+        {
+          "id": "3ab5e79f-a137-465a-ad10-cf26598dd92a",
+          "quantite": 1,
+          "nom": "Baleine volante à longues nageoires"
+        },
+        {
+          "id": "d04dad18-2cc7-4a76-8585-14d05d2e297d",
+          "quantite": 1,
+          "nom": "Panharmonicus"
+        },
+        {
+          "id": "1cd67143-4028-47b6-bc65-ecba62c6a0e3",
+          "quantite": 1,
+          "nom": "Amplificatrice visionnaire"
+        },
+        {
+          "id": "6c054a1e-1bdf-4b10-8853-fa6df23dbd49",
+          "quantite": 1,
+          "nom": "Mastodonte du bastion"
+        },
+        {
+          "id": "62af7d2c-65cd-433d-992c-29d77a91d452",
+          "quantite": 1,
+          "nom": "Fumigation"
+        },
+        {
+          "id": "94c87c76-2aad-4fa6-b632-398345911a4c",
+          "quantite": 1,
+          "nom": "Souverain des cieux, navire amiral du consul"
+        },
+        {
+          "id": "b2719484-b6ee-47c0-bf70-16dceceb8374",
+          "quantite": 1,
+          "nom": "Carcasse mécanique torrentielle"
+        },
+        {
+          "id": "6d1a0776-859d-4dda-accf-53500fea19a8",
+          "quantite": 9,
+          "nom": "Plaine"
+        },
+        {
+          "id": "e3ce0f62-b502-448f-8b23-1d103600b448",
+          "quantite": 8,
+          "nom": "Île"
+        }
+      ]
+    },
+    {
+      "nom": "Bob",
+      "cartes": [
+        {
+          "id": "cb75305e-15c9-43f2-9efa-6dc3912b2b66",
+          "quantite": 1,
+          "nom": "Module d'animation"
+        },
+        {
+          "id": "a675eb9d-c5e3-47ca-9b9c-a355c2cb9b3d",
+          "quantite": 1,
+          "nom": "Apprentie de l'inventeur"
+        },
+        {
+          "id": "03b6cbee-39af-43c6-b7b1-06d62c9a261c",
+          "quantite": 1,
+          "nom": "Étincelle de créativité"
+        },
+        {
+          "id": "3049271b-43b8-491a-af41-6a381eb6b3fe",
+          "quantite": 1,
+          "nom": "Pyrohélice de Chandra"
+        },
+        {
+          "id": "9bc2425e-18f6-4655-ae39-d9d149e2daaf",
+          "quantite": 1,
+          "nom": "Construction impatiente"
+        },
+        {
+          "id": "f6dc4625-9968-4640-9977-74783ae0daa4",
+          "quantite": 1,
+          "nom": "Entailleuse de graine de Kujar"
+        },
+        {
+          "id": "881f1551-2103-49e2-8b27-c5b1c623b330",
+          "quantite": 1,
+          "nom": "Procédé naturel"
+        },
+        {
+          "id": "1b626854-a51d-424d-988c-a2a30c9ec9f0",
+          "quantite": 1,
+          "nom": "Servant du Conduit"
+        },
+        {
+          "id": "d198ab38-4e15-4b99-b314-414566bb7de3",
+          "quantite": 1,
+          "nom": "Gantelet torche"
+        },
+        {
+          "id": "bf436758-7c33-4178-aae3-1a9368e085af",
+          "quantite": 1,
+          "nom": "Architecte de la sauvagerie"
+        },
+        {
+          "id": "b16f9a46-7bea-426b-8fff-f09249bc5a5c",
+          "quantite": 1,
+          "nom": "Marteleur électrostatique"
+        },
+        {
+          "id": "d58e3f57-bb7c-4ba3-9534-73ae105339f6",
+          "quantite": 1,
+          "nom": "Artisan de hautecime"
+        },
+        {
+          "id": "dbc6fd93-cc94-4f16-bf3a-fe25f37ba5fe",
+          "quantite": 1,
+          "nom": "Génie forgevif"
+        },
+        {
+          "id": "e5344d30-fbd8-431f-a4e0-441c587c370a",
+          "quantite": 1,
+          "nom": "Surveillant de Vive-soudure"
+        },
+        {
+          "id": "ef999bb1-ae53-4580-96a6-33f27d31c160",
+          "quantite": 1,
+          "nom": "Juge des façonneurs d'armures"
+        },
+        {
+          "id": "817983b6-c838-4c7a-97e5-7aefb11ff9d8",
+          "quantite": 1,
+          "nom": "Démolition"
+        },
+        {
+          "id": "bb24e36c-ffb2-4ab2-84c6-894fc4e26f59",
+          "quantite": 1,
+          "nom": "Représailles furieuses"
+        },
+        {
+          "id": "f5ad97f8-2d5a-459d-a6e3-f534a2947060",
+          "quantite": 1,
+          "nom": "Expérience de tête brûlée"
+        },
+        {
+          "id": "f7ff8d3f-32c8-4f39-a8ec-b725e536b70c",
+          "quantite": 1,
+          "nom": "Pisteur de vaisseaux volants"
+        },
+        {
+          "id": "e2a751d7-7efc-44ab-bb9f-028aa179db77",
+          "quantite": 1,
+          "nom": "Apogée verdoyante"
+        },
+        {
+          "id": "ee2ee780-0068-4820-9e47-88961f30b3c8",
+          "quantite": 1,
+          "nom": "Cultivatrice de lames"
+        },
+        {
+          "id": "a9bcc394-39c6-4ef3-8cfe-8b5afd3ebd64",
+          "quantite": 1,
+          "nom": "Auto-assembleur"
+        },
+        {
+          "id": "2f5a7f3c-1c85-408f-880f-4727433297ab",
+          "quantite": 1,
+          "nom": "Rôdeur de l'Auvent"
+        },
+        {
+          "id": "a5affb42-c7af-4216-a3c3-35d261d4b4ea",
+          "quantite": 9,
+          "nom": "Montagne"
+        },
+        {
+          "id": "0e910682-2611-4344-bd8c-d3b9d1a78eb7",
+          "quantite": 8,
+          "nom": "Forêt"
+        }
+      ]
+    }
+  ]
+}
