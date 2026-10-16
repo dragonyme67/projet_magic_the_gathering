@@ -6,7 +6,7 @@ void CarteController::test(
 ) {
     auto db = drogon::app().getDbClient("default");
     db->execSqlAsync(
-        "SELECT nom_imprime, image_small FROM Cartes LIMIT 20",
+        "SELECT nom_imprime, image_png FROM Cartes LIMIT 10",
 
         // Requête réussie
         [callback](const drogon::orm::Result& result)
@@ -17,7 +17,7 @@ void CarteController::test(
             {
                 Json::Value carte;
                 carte["nom"] = row["nom_imprime"].as<std::string>();
-                carte["image"] = row["image_small"].as<std::string>();
+                carte["image"] = row["image_png"].as<std::string>();
                 cartes.append(carte);
             }
 
