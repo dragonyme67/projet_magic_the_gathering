@@ -12,6 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_library(magic_core STATIC
     src/Catalogue.cpp
     src/Etat.cpp
+    src/Game.cpp
     src/Partie.cpp
 )
 target_include_directories(magic_core PUBLIC include)
@@ -20,8 +21,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 endif()
 
 # Console de jeu : lit les cartes dans la base SQLite et les decks dans un fichier JSON.
-# Ignorée (avec un message) si sqlite3 ou jsoncpp manquent : la bibliothèque et les tests
-# se compilent quand même.
+# Ignorée (avec un message) si sqlite3 ou jsoncpp manquent : la bibliothèque se compile quand même.
 find_package(PkgConfig QUIET)
 if(PkgConfig_FOUND)
     pkg_check_modules(SQLITE3 IMPORTED_TARGET sqlite3)
@@ -32,6 +32,7 @@ if(SQLITE3_FOUND AND JSONCPP_FOUND)
         console/main.cpp
         console/Affichage.cpp
         console/Chargeurs.cpp
+        console/Console.cpp
     )
     target_link_libraries(console_moteur PRIVATE magic_core PkgConfig::SQLITE3 PkgConfig::JSONCPP)
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")

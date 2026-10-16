@@ -78,6 +78,15 @@ target_sources(${PROJECT_NAME}
                ${FILTER_SRC}
                ${PLUGIN_SRC}
                ${MODEL_SRC})
+
+# ##############################################################################
+# Moteur de jeu (dossier ../moteur) : bibliothèque magic_core, sans dépendance à Drogon.
+# main.cc peut ensuite faire #include "magic/Game.hpp".
+# EXCLUDE_FROM_ALL : on ne compile du moteur que ce dont le backend a besoin
+# (pas la console, qui demande sqlite3 et jsoncpp).
+add_subdirectory(../moteur moteur EXCLUDE_FROM_ALL)
+target_link_libraries(${PROJECT_NAME} PRIVATE magic_core)
+
 # ##############################################################################
 # uncomment the following line for dynamically loading views
 # set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)

@@ -62,14 +62,16 @@ moteur/
 ├── include/magic/
 │   ├── Carte.hpp              Carte (colonnes utiles de la table Cartes, FR + EN) et Deck
 │   ├── Catalogue.hpp          Catalogue (id → Carte, rempli par l'appelant) et construireDeck(ids)
-│   ├── Etat.hpp               Joueur, Objet, Zone, Etat + primitives (deplacer, piocher, engager…)
-│   ├── Action.hpp             std::variant : Piocher, Deplacer, Engager, ChangerVie, FinDuTour
+│   ├── Etat.hpp               Joueur, Objet, Zone, Etat + opérations (deplacer, piocher, engager…)
+│   ├── Action.hpp             TypeAction + struct Action (Action::piocher(), Action::deplacer(…)…)
 │   ├── Evenement.hpp          ligne du journal (id, cause, règle, texte) : base des explications
 │   ├── Arbitre.hpp            interface valider(etat, joueur, action) + ArbitrePermissif
-│   └── Partie.hpp             façade : Partie(decks, graine), appliquer(joueur, action) → Resultat
-├── src/Catalogue.cpp, Etat.cpp, Partie.cpp
+│   ├── Partie.hpp             une partie : Partie(decks, graine), appliquer(joueur, action) → Resultat
+│   └── Game.hpp               point d'entrée : Game(catalogue, decks), lancer(), appliquer(), etat()
+├── src/Catalogue.cpp, Etat.cpp, Partie.cpp, Game.cpp
 └── console/                   jeu en console (seule partie qui dépend de SQLite et jsoncpp)
-    ├── main.cpp               boucle de commandes → Action → Partie::appliquer
+    ├── main.cpp               charge cartes et decks, crée Game, lance Console
+    ├── Console.{hpp,cpp}      boucle de commandes → Action → Game::appliquer
     ├── Chargeurs.{hpp,cpp}    base SQLite → Catalogue ; fichier de decks JSON → Deck
     └── Affichage.{hpp,cpp}    rendu de l'état, d'une zone, d'une carte
 
@@ -77,21 +79,29 @@ data/decks.json                decks des 2 joueurs (ids de la table Cartes)
 ```
 
 ```
- Action ──► Partie::appliquer ──► Arbitre::valider ──refus──► Resultat{accepte=false, refus}
-                                         │ ok
-                                         ▼
-                              Partie::executer(action)  ──► primitives de Etat (deplacer, piocher…)
-                                         │
-                                         └──► journal (Evenement) ──► Resultat{accepte=true, evenements}
+ Console / Drogon ──► Game::appliquer ──► Partie::appliquer ──► Arbitre::valider ──refus──► Resultat{accepte=false, refus}
+                                                                      │ ok
+                                                                      ▼
+                                                   Partie::executer(action) ──► opérations de Etat (deplacer, piocher…)
+                                                                      │
+                                                                      └──► journal (Evenement) ──► Resultat{accepte=true, evenements}
 ```
+
+**Qui fait quoi** : `Game` connaît le catalogue et les decks, lance une partie (`lancer`) et lui passe les actions ; c'est la seule classe que Drogon aura à utiliser. `Partie` contient l'état et le journal d'une partie. `Etat` ne fait que ranger les cartes. Le moteur n'a ni mutex ni accès aux fichiers : il faudra protéger les appels à `Game` (un verrou) quand plusieurs requêtes Drogon arriveront en même temps.
 
 Trois idées à garder quand on ajoutera les règles :
 
-- **`Etat` est une valeur** (copiable, sans pointeur externe) : retour arrière et sérialisation JSON faciles. Ses méthodes sont les **primitives** que les règles appelleront ; elles ne vérifient que la cohérence (id valide).
+- **`Etat` se copie facilement** : retour arrière et sérialisation JSON simples. Ses méthodes sont les **opérations de base** que les règles appelleront ; elles ne vérifient que la cohérence (id valide).
 - **`Arbitre` est le point d'insertion des règles** : aujourd'hui `ArbitrePermissif`, demain un arbitre CHR++. `Partie` ne change pas.
 - **Une `Carte` est immuable, un `Objet` est un exemplaire en jeu** (zone, engagé…) qui la référence : plusieurs exemplaires d'une même carte sont possibles.
 
-Ajouter une action : une struct dans `Action.hpp`, l'ajouter au `std::variant`, écrire la surcharge `Partie::executer` (sans elle, le code ne compile pas), puis la commande correspondante dans `console/main.cpp`. Ajouter une zone : une valeur dans `Zone` et son nom dans `Etat.cpp`.
+Ajouter une action : une valeur dans `TypeAction` et une fonction `Action::…` dans `Action.hpp`, un cas dans `Partie::executer` (le compilateur prévient si on l'oublie), puis la commande correspondante dans `console/Console.cpp`. Ajouter une zone : une valeur dans `Zone` et son nom dans `Etat.cpp`.
+
+### Utiliser le moteur depuis le backend
+
+`backend/CMakeLists.txt` contient `add_subdirectory(../moteur moteur EXCLUDE_FROM_ALL)` puis `target_link_libraries(backend PRIVATE magic_core)` : le backend compile `magic_core` avec lui (pas la console) et `backend/main.cc` peut faire `#include "magic/Game.hpp"`. Dans Docker, `docker-compose.yml` monte aussi `./moteur` (en lecture seule), sinon `../moteur` n'existe pas dans le conteneur.
+
+Le moteur ne sait pas lire la base ni le fichier de decks : le backend doit construire le `Catalogue` et les `Deck` lui-même avant de créer le `Game` (voir `console/Chargeurs.cpp` pour l'exemple côté console).
 
 ### Fichier de decks (`data/decks.json`)
 
@@ -176,6 +186,8 @@ controllers ─► api ─► core/moteur ─► core/regles ─► core/explica
 ```
 
 ## Fonctions et types clés de `magic_core`
+
+> Esquisse de la cible, écrite avant le squelette : les signatures réelles (plus simples, sans `std::variant` ni `std::optional`) sont dans `moteur/include/magic/`.
 
 ```cpp
 // cartes/Catalogue.h  — lecture seule après remplissage

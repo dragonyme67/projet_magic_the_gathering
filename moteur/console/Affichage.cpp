@@ -23,11 +23,11 @@ void afficherJoueur(std::ostream& sortie, const Etat& etat, JoueurId id) {
            << joueur.zone(Zone::Bibliotheque).size() << " · cimetière " << joueur.zone(Zone::Cimetiere).size()
            << " · exil " << joueur.zone(Zone::Exil).size() << '\n';
 
-    const auto& champ = joueur.zone(Zone::ChampDeBataille);
+    const std::vector<ObjetId>& champ = joueur.zone(Zone::ChampDeBataille);
     sortie << "     champ de bataille (" << champ.size() << ")\n";
     for (ObjetId o : champ) sortie << "       " << etiquette(etat.objets[o], false) << '\n';
 
-    const auto& main = joueur.zone(Zone::Main);
+    const std::vector<ObjetId>& main = joueur.zone(Zone::Main);
     if (actif) {
         sortie << "     main (" << main.size() << ")\n";
         for (ObjetId o : main) sortie << "       " << etiquette(etat.objets[o], true) << '\n';
@@ -41,14 +41,14 @@ void afficherJoueur(std::ostream& sortie, const Etat& etat, JoueurId id) {
 void afficherEtat(std::ostream& sortie, const Etat& etat) {
     sortie << "\n══════ Tour " << etat.tour << " · au tour de " << etat.joueurs[etat.joueurActif].nom
            << " ══════\n";
-    for (JoueurId id = 0; id < static_cast<JoueurId>(etat.joueurs.size()); ++id) {
+    for (JoueurId id = 0; id < etat.nbJoueurs(); ++id) {
         if (id != etat.joueurActif) afficherJoueur(sortie, etat, id);
     }
     afficherJoueur(sortie, etat, etat.joueurActif);
 }
 
 void afficherZone(std::ostream& sortie, const Etat& etat, JoueurId joueur, Zone zone) {
-    const auto& contenu = etat.joueurs[joueur].zone(zone);
+    const std::vector<ObjetId>& contenu = etat.joueurs[joueur].zone(zone);
     sortie << etat.joueurs[joueur].nom << " — " << nomZone(zone) << " (" << contenu.size() << ")\n";
     for (ObjetId o : contenu) sortie << "  " << etiquette(etat.objets[o], true) << '\n';
 }
