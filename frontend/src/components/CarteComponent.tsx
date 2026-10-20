@@ -8,10 +8,7 @@ function CarteComponent({ nom, image, mana, description }: Carte) {
         src={image}
         alt={nom}
         className="block h-full w-full object-contain rounded-2xl"
-      />''
-      {/* <p className="max-w-full truncate text-center text-sm font-semibold">
-        {nom}
-      </p> */}
+      />
     </div>
   );
 }

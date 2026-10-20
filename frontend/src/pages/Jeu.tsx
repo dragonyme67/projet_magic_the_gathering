@@ -1,67 +1,59 @@
 import { useEffect, useState } from 'react'
-import type { Partie, ReponseAction } from "../interfaces/Partie"
-import ChampDeBatailleComponent from '../components/ChampDeBatailleComponent';
+import type { Carte } from "../interfaces/Carte"
+import JoueurComponent from '../components/JoueurComponent';
 
 function Jeu() {
 
-  const [partie, setPartie] = useState<Partie | null>(null)
+  const [cartes, setCartes] = useState<Carte[]>([])
   const [erreur, setErreur] = useState<string | null>(null)
   const [chargement, setChargement] = useState(true)
 
   useEffect(() => {
-    let ignore = false
-
-    fetch('/api/jeu', { method: 'POST' })
+    fetch('/api/cartes/test')
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Erreur HTTP : ${response.status}`)
         }
         return response.json()
       })
-      .then((data: Partie) => {
-        if (!ignore) setPartie(data)
+      .then((data) => {
+        setCartes(data.cartes)
       })
       .catch((error: Error) => {
-        if (!ignore) setErreur(error.message)
+        setErreur(error.message)
       })
       .finally(() => {
-        if (!ignore) setChargement(false)
+        setChargement(false)
       })
-
-    return () => {
-      ignore = true
-    }
   }, [])
 
-
-  const [joueurBas, joueurHaut] = partie?.joueurs ?? []
-
   return (
-    <main className="h-full flex flex-col overflow-hidden">
+    <main className="flex flex-1 min-h-0">
 
       {chargement && <p>Création de la partie...</p>}
       {erreur && <p>Erreur : {erreur}</p>}
 
-      {joueurBas && joueurHaut && (
         <>
-          <div className="flex-1" />
-          {/* Main du joueur du haut */}
-          <section
-            aria-label={`Main de ${joueurHaut.nom}`}
-            className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2"
-          >
-            <ChampDeBatailleComponent cartes={joueurHaut.main} />
-          </section>
-          {/* Main du joueur du bas */}
-          <section
-            aria-label={`Main de ${joueurBas.nom}`}
-            className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2"
-          >
-            <ChampDeBatailleComponent cartes={joueurBas.main} />
-          </section>
-          <div className="flex-1" />
+          <div className="flex min-h-0 flex-col h-full w-full">
+            <JoueurComponent
+              main={cartes}
+              bibliotheque={cartes}
+              cimetiere={cartes}
+              exil={cartes}
+              champDeBataille={cartes}
+              joueur={1}
+            />
+            <JoueurComponent
+              main={cartes}
+              bibliotheque={cartes}
+              cimetiere={cartes}
+              exil={cartes}
+              champDeBataille={cartes}
+              joueur={2}
+            />
+          </div>
         </>
-      )}
+      )
     </main>
   )
 }
