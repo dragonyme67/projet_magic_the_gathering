@@ -1,12 +1,14 @@
 #include "magic/Partie.hpp"
 
+#include <cstdlib>
 #include <utility>
 
 namespace magic {
 
 Partie::Partie(const std::vector<Deck>& decks, unsigned graine,
                std::unique_ptr<Arbitre> arbitre, int mainInitiale)
-    : arbitre_(std::move(arbitre)), hasard_(graine) {
+    : arbitre_(std::move(arbitre)) {
+    std::srand(graine);  // même graine = même mélange
     for (const Deck& deck : decks) {
         Joueur joueur;
         joueur.nom = deck.joueur;
@@ -127,12 +129,9 @@ int Partie::noter(const std::string& regle, const std::string& texte, int cause)
 }
 
 // --- Hasard ---
-// Congruence linéaire 32 bits (dépassement voulu), on garde les 16 bits hauts.
-// Pas de rand() : global, deux parties simultanées se perturberaient.
 
 int Partie::tirer(int max) {
-    hasard_ = hasard_ * 1664525u + 1013904223u;
-    return (hasard_ >> 16) % max;
+    return std::rand() % max;
 }
 
 // Fisher-Yates

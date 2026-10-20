@@ -41,13 +41,12 @@ private:
 
     int noter(const std::string& regle, const std::string& texte, int cause = -1);
 
-    int tirer(int max);  // 0 .. max-1, max < 65536
+    int tirer(int max);  // 0 .. max-1
     void melanger(std::vector<ObjetId>& cartes);
 
     Etat etat_;
     std::vector<Evenement> journal_;
     std::unique_ptr<Arbitre> arbitre_;
-    unsigned int hasard_;
 };
 
 }

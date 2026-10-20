@@ -21,3 +21,10 @@ export interface Partie {
   joueurActif: number
   joueurs: JoueurPartie[]
 }
+
+export interface ReponseAction {
+  accepte?: boolean
+  refus?: string
+  error?: string
+  partie?: Partie
+}
