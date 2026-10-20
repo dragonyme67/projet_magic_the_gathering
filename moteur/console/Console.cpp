@@ -73,7 +73,7 @@ Console::Console(Game& jeu) : jeu_(jeu) {}
 void Console::run() {
     if (!jeu_.enCours()) jeu_.lancer();
 
-    std::cout << jeu_.catalogue().taille() << " cartes en base · graine " << jeu_.graine()
+    std::cout << "Graine " << jeu_.graine()
               << " (relancer avec cette graine pour rejouer le même mélange)\n";
     for (const Evenement& e : jeu_.journal()) std::cout << "  • " << e.texte << '\n';
     afficherEtat(std::cout, jeu_.etat());

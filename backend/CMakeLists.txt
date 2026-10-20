@@ -54,6 +54,7 @@ else ()
 endif ()
 
 aux_source_directory(controllers CTL_SRC)
+aux_source_directory(services SVC_SRC)
 aux_source_directory(filters FILTER_SRC)
 aux_source_directory(plugins PLUGIN_SRC)
 aux_source_directory(models MODEL_SRC)
@@ -75,6 +76,7 @@ target_sources(${PROJECT_NAME}
                PRIVATE
                ${SRC_DIR}
                ${CTL_SRC}
+               ${SVC_SRC}
                ${FILTER_SRC}
                ${PLUGIN_SRC}
                ${MODEL_SRC})
@@ -82,7 +84,10 @@ target_sources(${PROJECT_NAME}
 # ##############################################################################
 # Moteur de jeu (EXCLUDE_FROM_ALL : sans la console)
 add_subdirectory(../moteur moteur EXCLUDE_FROM_ALL)
-target_link_libraries(${PROJECT_NAME} PRIVATE magic_core)
+if(NOT TARGET magic_io)
+    message(FATAL_ERROR "magic_io absente : installer libsqlite3-dev et libjsoncpp-dev")
+endif()
+target_link_libraries(${PROJECT_NAME} PRIVATE magic_core magic_io)
 
 # ##############################################################################
 # uncomment the following line for dynamically loading views

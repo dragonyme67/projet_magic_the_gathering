@@ -19,6 +19,7 @@ struct Carte {
     std::string texteImprime;
     std::string force;  // texte ("*" possible)
     std::string endurance;
+    std::string image;  // image_png
 
     // français s'il existe, sinon anglais
     const std::string& nomAffiche() const { return nomImprime.empty() ? nom : nomImprime; }
@@ -28,7 +29,6 @@ struct Carte {
 
 struct Deck {
     std::string joueur;
-    std::vector<Carte> cartes;  // une entrée par exemplaire
+    std::vector<Carte> cartes; 
 };
-
 }

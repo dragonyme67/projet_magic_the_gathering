@@ -1,0 +1,29 @@
+{
+  "cartes": [
+    { "id": "cb75305e-15c9-43f2-9efa-6dc3912b2b66", "quantite": 1 },
+    { "id": "a675eb9d-c5e3-47ca-9b9c-a355c2cb9b3d", "quantite": 1 },
+    { "id": "03b6cbee-39af-43c6-b7b1-06d62c9a261c", "quantite": 1 },
+    { "id": "3049271b-43b8-491a-af41-6a381eb6b3fe", "quantite": 1 },
+    { "id": "9bc2425e-18f6-4655-ae39-d9d149e2daaf", "quantite": 1 },
+    { "id": "f6dc4625-9968-4640-9977-74783ae0daa4", "quantite": 1 },
+    { "id": "881f1551-2103-49e2-8b27-c5b1c623b330", "quantite": 1 },
+    { "id": "1b626854-a51d-424d-988c-a2a30c9ec9f0", "quantite": 1 },
+    { "id": "d198ab38-4e15-4b99-b314-414566bb7de3", "quantite": 1 },
+    { "id": "bf436758-7c33-4178-aae3-1a9368e085af", "quantite": 1 },
+    { "id": "b16f9a46-7bea-426b-8fff-f09249bc5a5c", "quantite": 1 },
+    { "id": "d58e3f57-bb7c-4ba3-9534-73ae105339f6", "quantite": 1 },
+    { "id": "dbc6fd93-cc94-4f16-bf3a-fe25f37ba5fe", "quantite": 1 },
+    { "id": "e5344d30-fbd8-431f-a4e0-441c587c370a", "quantite": 1 },
+    { "id": "ef999bb1-ae53-4580-96a6-33f27d31c160", "quantite": 1 },
+    { "id": "817983b6-c838-4c7a-97e5-7aefb11ff9d8", "quantite": 1 },
+    { "id": "bb24e36c-ffb2-4ab2-84c6-894fc4e26f59", "quantite": 1 },
+    { "id": "f5ad97f8-2d5a-459d-a6e3-f534a2947060", "quantite": 1 },
+    { "id": "f7ff8d3f-32c8-4f39-a8ec-b725e536b70c", "quantite": 1 },
+    { "id": "e2a751d7-7efc-44ab-bb9f-028aa179db77", "quantite": 1 },
+    { "id": "ee2ee780-0068-4820-9e47-88961f30b3c8", "quantite": 1 },
+    { "id": "a9bcc394-39c6-4ef3-8cfe-8b5afd3ebd64", "quantite": 1 },
+    { "id": "2f5a7f3c-1c85-408f-880f-4727433297ab", "quantite": 1 },
+    { "id": "a5affb42-c7af-4216-a3c3-35d261d4b4ea", "quantite": 9 },
+    { "id": "0e910682-2611-4344-bd8c-d3b9d1a78eb7", "quantite": 8 }
+  ]
+}

@@ -1,5 +1,7 @@
 # Projet Magic
 
+Changer la manière dont est stocké le deck /!\
+
 Installer :
 sudo apt install libjsoncpp-dev
 

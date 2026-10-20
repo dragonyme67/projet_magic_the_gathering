@@ -5,7 +5,6 @@
 
 #include "magic/Action.hpp"
 #include "magic/Carte.hpp"
-#include "magic/Catalogue.hpp"
 #include "magic/Etat.hpp"
 #include "magic/Evenement.hpp"
 #include "magic/Partie.hpp"
@@ -15,7 +14,7 @@ namespace magic {
 // Point d'entrée du moteur (console, Drogon). Une partie à la fois, pas thread-safe.
 class Game {
 public:
-    Game(const Catalogue& catalogue, const std::vector<Deck>& decks);
+    explicit Game(const std::vector<Deck>& decks);
 
     // sans graine : l'heure
     void lancer();
@@ -24,7 +23,6 @@ public:
 
     bool enCours() const { return partie_ != nullptr; }
     unsigned graine() const { return graine_; }
-    const Catalogue& catalogue() const { return catalogue_; }
 
     // sans partie : refus « Aucune partie en cours »
     Resultat appliquer(JoueurId joueur, const Action& action);
@@ -36,7 +34,6 @@ public:
 private:
     void exigerPartie() const;
 
-    Catalogue catalogue_;
     std::vector<Deck> decks_;
     std::unique_ptr<Partie> partie_;
     unsigned graine_ = 0;

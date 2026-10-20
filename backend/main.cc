@@ -1,7 +1,6 @@
 
 #include <drogon/drogon.h>
 #include <cstdlib>
-#include "magic/Game.hpp"
 
 
 int main() {

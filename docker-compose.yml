@@ -34,6 +34,7 @@ services:
       - ./moteur:${PWD}/moteur:ro
       - ./docker:${PWD}/docker:ro
       - ./data:${PWD}/data
+      - ./resources:${PWD}/resources:ro
 
   # Lance `npm run dev` (Vite) sur le port 5173 ; /api est relayé vers le backend.
   # Utilise le node_modules déjà présent dans frontend/ (npm install sur l'hôte).

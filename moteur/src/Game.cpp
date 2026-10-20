@@ -5,8 +5,7 @@
 
 namespace magic {
 
-Game::Game(const Catalogue& catalogue, const std::vector<Deck>& decks)
-    : catalogue_(catalogue), decks_(decks) {}
+Game::Game(const std::vector<Deck>& decks) : decks_(decks) {}
 
 void Game::lancer() {
     lancer(static_cast<unsigned>(std::time(nullptr)));

@@ -1,8 +1,8 @@
-import type { Carte } from "../interfaces/Carte"
+import type { CarteEnJeu } from "../interfaces/Partie"
 import CarteComponent from '../components/CarteComponent';
 
 interface ChampDeBatailleComponentProps {
-    cartes: Carte[]
+    cartes: CarteEnJeu[]
 }
 
 
@@ -11,8 +11,10 @@ function ChampDeBatailleComponentProps({ cartes }: ChampDeBatailleComponentProps
     <div className="grid h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)] gap-2">        
         {cartes.map((carte) => (
             <CarteComponent
-                key={carte.nom}
+                key={carte.id}
                 nom={carte.nom}
+                mana={carte.mana}
+                description={carte.description}
                 image={carte.image}
             />
         ))}

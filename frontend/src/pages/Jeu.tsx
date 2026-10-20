@@ -1,53 +1,63 @@
 import { useEffect, useState } from 'react'
-import type { Carte } from "../interfaces/Carte"
+import type { Partie } from "../interfaces/Partie"
 import ChampDeBatailleComponent from '../components/ChampDeBatailleComponent';
 
-function Catalogue() {
+function Jeu() {
 
-    const [cartes, setCartes] = useState<Carte[]>([]) 
+    const [partie, setPartie] = useState<Partie | null>(null)
     const [erreur, setErreur] = useState<string | null>(null)
     const [chargement, setChargement] = useState(true)
 
     useEffect(() => {
-    fetch('/api/cartes/test')
+    let ignore = false
+
+    fetch('/api/jeu', { method: 'POST' })
       .then((response) => {
         if (!response.ok) {
           throw new Error(`Erreur HTTP : ${response.status}`)
         }
         return response.json()
       })
-      .then((data: Carte[]) => {
-        setCartes(data)
+      .then((data: Partie) => {
+        if (!ignore) setPartie(data)
       })
       .catch((error: Error) => {
-        setErreur(error.message)
+        if (!ignore) setErreur(error.message)
       })
       .finally(() => {
-        setChargement(false)
+        if (!ignore) setChargement(false)
       })
+
+    return () => {
+      ignore = true
+    }
     }, [])
+
+    const [joueurBas, joueurHaut] = partie?.joueurs ?? []
 
     return (
     <main className="h-full flex flex-col overflow-hidden">
 
-      {chargement && <p>Chargement des cartes...</p>}
+      {chargement && <p>Création de la partie...</p>}
       {erreur && <p>Erreur : {erreur}</p>}
 
-      {!chargement && !erreur && cartes.length === 0 && (
-        <p>Aucune carte.</p>
-      )}
-
-      {!chargement && !erreur && cartes.length > 0 && (
+      {joueurBas && joueurHaut && (
         <>
         <div className="flex-1" />
-        {/* Champ de bataille du joueur du haut */}
-        <section className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2">
-        <ChampDeBatailleComponent cartes={cartes} />
+        {/* Main du joueur du haut */}
+        <section
+          aria-label={`Main de ${joueurHaut.nom}`}
+          className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2"
+        >
+        <ChampDeBatailleComponent cartes={joueurHaut.main} />
         </section>
         <div className="h-[5vh]" />
-        {/* Champ de bataille du joueur du bas */}
-        <section className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2">
-        <ChampDeBatailleComponent cartes={cartes} />
+        {/* Main du joueur du bas */}
+        <section
+          aria-label={`Main de ${joueurBas.nom}`}
+          className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2"
+        >
+        <ChampDeBatailleComponent cartes={joueurBas.main} />
         </section>
         <div className="flex-1" />
         </>
@@ -56,4 +66,4 @@ function Catalogue() {
   )
 }
 
-export default Catalogue
+export default Jeu
