@@ -1,14 +1,14 @@
 import type { Carte } from "../interfaces/Carte"
 import CarteComponent from '../components/CarteComponent';
 
-interface ChampDeBatailleComponentProps {
-    cartes: Carte[]
+interface ListeCartesProps {
+    cartes: Carte[];
 }
 
 
-function ChampDeBatailleComponentProps({ cartes }: ChampDeBatailleComponentProps) {
+function ListeCartesProps({ cartes }: ListeCartesProps) {
   return (
-    <div className="grid h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)] gap-2">        
+    <div className="grid min-h-0 h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)]">        
         {cartes.map((carte) => (
             <CarteComponent
                 key={carte.nom}
@@ -20,4 +20,4 @@ function ChampDeBatailleComponentProps({ cartes }: ChampDeBatailleComponentProps
   );
 }
 
-export default ChampDeBatailleComponentProps
+export default ListeCartesProps

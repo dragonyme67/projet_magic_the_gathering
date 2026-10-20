@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
 import type { Carte } from "../interfaces/Carte"
-import ChampDeBatailleComponent from '../components/ChampDeBatailleComponent';
+import JoueurComponent from '../components/JoueurComponent';
 
-function Catalogue() {
+function Jeu() {
 
-    const [cartes, setCartes] = useState<Carte[]>([]) 
-    const [erreur, setErreur] = useState<string | null>(null)
-    const [chargement, setChargement] = useState(true)
+  const [cartes, setCartes] = useState<Carte[]>([])
+  const [erreur, setErreur] = useState<string | null>(null)
+  const [chargement, setChargement] = useState(true)
 
-    useEffect(() => {
+  useEffect(() => {
     fetch('/api/cartes/test')
       .then((response) => {
         if (!response.ok) {
@@ -25,10 +25,10 @@ function Catalogue() {
       .finally(() => {
         setChargement(false)
       })
-    }, [])
+  }, [])
 
-    return (
-    <main className="h-full flex flex-col overflow-hidden">
+  return (
+    <main className="flex flex-1 min-h-0">
 
       {chargement && <p>Chargement des cartes...</p>}
       {erreur && <p>Erreur : {erreur}</p>}
@@ -39,21 +39,28 @@ function Catalogue() {
 
       {!chargement && !erreur && cartes.length > 0 && (
         <>
-        <div className="flex-1" />
-        {/* Champ de bataille du joueur du haut */}
-        <section className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2">
-        <ChampDeBatailleComponent cartes={cartes} />
-        </section>
-        <div className="h-[5vh]" />
-        {/* Champ de bataille du joueur du bas */}
-        <section className="h-[25vh] shrink-0 overflow-hidden border-y border-gray-400 p-2">
-        <ChampDeBatailleComponent cartes={cartes} />
-        </section>
-        <div className="flex-1" />
+          <div className="flex min-h-0 flex-col h-full w-full">
+            <JoueurComponent
+              main={cartes}
+              bibliotheque={cartes}
+              cimetiere={cartes}
+              exil={cartes}
+              champDeBataille={cartes}
+              joueur={1}
+            />
+            <JoueurComponent
+              main={cartes}
+              bibliotheque={cartes}
+              cimetiere={cartes}
+              exil={cartes}
+              champDeBataille={cartes}
+              joueur={2}
+            />
+          </div>
         </>
       )}
     </main>
   )
 }
 
-export default Catalogue
+export default Jeu

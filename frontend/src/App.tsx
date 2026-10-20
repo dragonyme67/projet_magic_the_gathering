@@ -6,8 +6,8 @@ import Jeu from './pages/Jeu'
 
 function App() {
   return (
-    <div className="h-screen flex flex-col overflow-hidden p-6 bg-green-200">
-      <nav className="mb-6 flex shrink-0 gap-4 bg-red-400 p-4 rounded-lg">
+    <div className="h-screen flex flex-col overflow-hidden bg-green-200">
+      <nav className="flex shrink-0 gap-2 bg-green-300 p-2">
         <Link to="/" className='btn-primary'>Accueil</Link>
         <Link to="/catalogue" className='btn-primary'>Catalogue</Link>
         <Link to="/jeu" className='btn-primary'>Jeu</Link>
