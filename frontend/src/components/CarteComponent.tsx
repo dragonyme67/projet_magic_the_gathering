@@ -1,7 +1,7 @@
 import type { Carte } from "../interfaces/Carte"
 
 
-function CarteComponent({ nom, image, mana, description }: Carte) {
+function CarteComponent({ nom, image }: Carte) {
   return (
     <div className="h-full w-full min-h-0 min-w-0 overflow-hidden">
       <img

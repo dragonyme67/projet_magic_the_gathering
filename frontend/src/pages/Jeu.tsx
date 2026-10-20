@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Carte } from "../interfaces/Carte"
 import JoueurComponent from '../components/JoueurComponent';
+import InfoPartieComponent from '../components/InfoPartieComponent';
 
 function Jeu() {
 
@@ -17,7 +18,7 @@ function Jeu() {
         return response.json()
       })
       .then((data) => {
-        setCartes(data.cartes)
+        setCartes(data)
       })
       .catch((error: Error) => {
         setErreur(error.message)
@@ -33,8 +34,18 @@ function Jeu() {
       {chargement && <p>Création de la partie...</p>}
       {erreur && <p>Erreur : {erreur}</p>}
 
-        <>
-          <div className="flex min-h-0 flex-col h-full w-full">
+      <>
+          <div className="flex h-full w-[8vw] min-h-0 overflow-hidden gap-2 bg-purple-600">
+          <InfoPartieComponent
+            vie_joueur_haut={20}
+            vie_joueur_bas={20}
+            tour={1}
+            nom_joueur_haut={"Alice"}
+            nom_joueur_bas={"Bob"}
+            joueur_actif={"Alice"}
+          />
+          </div>
+          <div className="flex flex-1 min-h-0 flex-col h-full w-full">
             <JoueurComponent
               main={cartes}
               bibliotheque={cartes}
@@ -52,8 +63,7 @@ function Jeu() {
               joueur={2}
             />
           </div>
-        </>
-      )
+      </>
     </main>
   )
 }

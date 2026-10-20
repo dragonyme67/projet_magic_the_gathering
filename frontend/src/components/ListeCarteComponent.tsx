@@ -13,8 +13,6 @@ function ListeCartesProps({ cartes }: ListeCartesProps) {
             <CarteComponent
                 key={carte.nom}
                 nom={carte.nom}
-                mana={carte.mana}
-                description={carte.description}
                 image={carte.image}
             />
         ))}
