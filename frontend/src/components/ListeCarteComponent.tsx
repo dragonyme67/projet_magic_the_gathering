@@ -8,7 +8,7 @@ interface ListeCartesProps {
 
 function ListeCartesProps({ cartes }: ListeCartesProps) {
   return (
-    <div className="grid min-h-0 h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)]">        
+    <div className="grid min-h-0 h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)] gap-1">        
         {cartes.map((carte) => (
             <CarteComponent
                 key={carte.nom}
