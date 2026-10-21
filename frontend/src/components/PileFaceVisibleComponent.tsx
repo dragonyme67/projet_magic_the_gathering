@@ -16,6 +16,7 @@ function PileFaceVisibleComponent({ cartes }: PileFaceVisibleComponentProps) {
                         key={carteDessus.nom}
                         nom={carteDessus.nom}
                         image={carteDessus.image}
+                        description={carteDessus.description}
                     />
                 </div>
             )}

@@ -44,6 +44,7 @@ function Catalogue() {
                 key={carte.nom}
                 nom={carte.nom}
                 image={carte.image}
+                description={carte.description}
             />
         ))}
     </div>

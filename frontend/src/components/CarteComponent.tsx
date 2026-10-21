@@ -1,7 +1,7 @@
 import type { Carte } from "../interfaces/Carte"
 import { useState } from "react"
 
-function CarteComponent({ nom, image }: Carte) {
+function CarteComponent({ nom, image, description }: Carte) {
   const [survolee, setSurvolee] = useState(false);
 
   return (
@@ -19,13 +19,17 @@ function CarteComponent({ nom, image }: Carte) {
       {
         survolee && (
           <div className="fixed inset-0 z-50 flex
-                                  items-center justify-center
+                                  items-center justify-center gap-2
                                   pointer-events-none">
             <img
               src={image}
               alt={nom}
-              className="w-80 shadow-2xl rounded-xl"
+              className="w-64 shadow-2xl rounded-xl"
             />
+            <div className="w-64 rounded-lg bg-gray-600 p-3 text-sm text-white shadow-2xl">
+              <p className="font-bold">{nom}</p>
+              <p className="whitespace-pre-line">{description}</p>
+            </div>
           </div>
         )
       }
