@@ -6,6 +6,6 @@
     <chr_constraint> demande(+int, +int, +int), a_pioche(+int, +int)
     pas_son_tour @ demande(J, _, _) <=> J != etat.joueurActif | refuser(verdict, "pas_son_tour");;
     pioche_vide @ demande(J, T, _) <=> T == 0 && bibliotheque_vide(etat, J) | refuser(verdict, "piocher_vide");;
-    deja_piocher @ demande(J, T, Tour) \ a_pioche(J, Tour) <=> T == 0 | refuser(verdict, "deja_piocher");;
+    deja_piocher @ a_pioche(J, Tour) \ demande(J, T, Tour) <=> T == 0 | refuser(verdict, "deja_piocher");;
     pioche @ demande(J, T, Tour) <=> T == 0 | a_pioche(J, Tour);;
 </CHR>

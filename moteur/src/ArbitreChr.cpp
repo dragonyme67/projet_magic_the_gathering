@@ -10,6 +10,7 @@ namespace {
 std::string translate(const std::string& regle) {
     if (regle == "pas_son_tour") return "Ce n'est pas votre tour.";
     if (regle == "piocher_vide") return "La bibliothèque est vide.";
+    if (regle == "deja_piocher") return "Vous avez déjà pioché ce tour-ci.";
     return "Action refusée (règle " + regle + ").";
 }
 
