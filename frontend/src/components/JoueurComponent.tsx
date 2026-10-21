@@ -21,7 +21,7 @@ function JoueurComponent({ joueur, actif = false, main, bibliotheque, cimetiere,
                 {/* Champ de bataille du joueur */}
                 <div className="relative flex flex-1 shrink-0 overflow-hidden rounded-xl border border-dashed border-[#cfe0d0]/35 bg-[#2a4d3f]/30 p-2">
                     {champDeBataille.length === 0 && (
-                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center font-serif text-sm uppercase tracking-[0.4em] text-[#f2efe4]/35">
+                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center font-titre text-xl italic text-[#f2efe4]/40">
                             Champ de bataille
                         </span>
                     )}
@@ -31,7 +31,7 @@ function JoueurComponent({ joueur, actif = false, main, bibliotheque, cimetiere,
                     <div className="flex h-full w-full justify-around gap-2">
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
                             {/* Exil du joueur du haut */}
-                            <div className="font-serif text-xs uppercase tracking-widest text-[#e3efe3]/90">
+                            <div className="font-titre text-base font-bold text-[#f2efe4]">
                                 Exil
                             </div>
                             <PileFaceVisibleComponent cartes={exil} />
@@ -43,14 +43,14 @@ function JoueurComponent({ joueur, actif = false, main, bibliotheque, cimetiere,
                         </div>
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
                             {/* Bibliothèque du joueur du haut */}
-                            <div className="font-serif text-xs uppercase tracking-widest text-[#e3efe3]/90">
+                            <div className="font-titre text-base font-bold text-[#f2efe4]">
                                 Bibliothèque
                             </div>
                             <BibliothequeComponent nb_cartes={bibliotheque} />
                         </div>
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
                             {/* Cimetière du joueur du haut */}
-                            <div className="font-serif text-xs uppercase tracking-widest text-[#e3efe3]/90">
+                            <div className="font-titre text-base font-bold text-[#f2efe4]">
                                 Cimetière
                             </div>
                             <PileFaceVisibleComponent cartes={cimetiere} />

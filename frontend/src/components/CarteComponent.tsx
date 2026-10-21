@@ -26,8 +26,8 @@ function CarteComponent({ nom, image, description }: Carte) {
               alt={nom}
               className="w-64 shadow-2xl rounded-xl ring-1 ring-white/20"
             />
-            <div className="w-64 rounded-xl border border-[#d8c27c]/45 bg-[#2a4d3f]/95 p-4 text-sm leading-relaxed text-[#f2efe4] shadow-2xl">
-              <p className="mb-2 font-serif text-base font-bold text-[#e4d194]">{nom}</p>
+            <div className="w-64 rotate-1 rounded-[3px_8px_4px_9px] border-2 border-[#6b4b32] bg-[#eee2c3] p-4 text-sm leading-relaxed text-[#35281a] shadow-[5px_5px_0_rgba(0,0,0,0.45)]">
+              <p className="mb-2 border-b-2 border-dashed border-[#6b4b32]/50 pb-1 font-titre text-lg font-bold text-[#4a2f18]">{nom}</p>
               <p className="whitespace-pre-line">{description}</p>
             </div>
           </div>

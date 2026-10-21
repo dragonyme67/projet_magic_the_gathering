@@ -30,7 +30,7 @@ function Jeu() {
   return (
     <main className="flex flex-1 min-h-0 text-[#f2efe4] bg-[radial-gradient(ellipse_at_center,#6b9b7c,#41705b)]">
 
-      {chargement && <p className="m-4">Création de la partie...</p>}
+      {chargement && <p className="m-4 font-titre text-lg">Création de la partie...</p>}
       {erreur && <p className="m-4 text-[#f3c5b8]">Erreur : {erreur}</p>}
 
       {partie && haut && bas && (

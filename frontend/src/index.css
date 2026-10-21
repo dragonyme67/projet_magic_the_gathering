@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@theme {
+  --font-titre: "Alegreya", Georgia, serif;
+}
+
 @layer components {
   .btn-primary {
     border-radius: calc(infinity * 1px);

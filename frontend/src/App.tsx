@@ -7,7 +7,7 @@ import Jeu from './pages/Jeu'
 function App() {
   const surPlateau = useLocation().pathname === '/jeu'
   const classeLien = surPlateau
-    ? 'rounded-full border border-[#cfe0d0]/30 bg-[#2a4d3f]/60 px-5 py-2 font-semibold text-[#f2efe4] hover:bg-[#2a4d3f]/85'
+    ? 'rounded-full border border-[#cfe0d0]/30 bg-[#2a4d3f]/60 px-5 py-2 font-titre text-lg font-bold text-[#f2efe4] hover:bg-[#2a4d3f]/85'
     : 'btn-primary'
 
   return (
