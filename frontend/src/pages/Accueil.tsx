@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-
-
 function Accueil() { 
 
   return(

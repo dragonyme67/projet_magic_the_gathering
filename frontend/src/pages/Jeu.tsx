@@ -53,7 +53,8 @@ function Jeu() {
             cimetiere={haut.cimetiere}
             exil={haut.exil}
             champDeBataille={haut.champ_de_bataille}
-            joueur={1}
+            joueur={0}
+            onPartieChange={setPartie}
           />
           <JoueurComponent
             actif={partie.joueurActif === 1}
@@ -62,7 +63,8 @@ function Jeu() {
             cimetiere={bas.cimetiere}
             exil={bas.exil}
             champDeBataille={bas.champ_de_bataille}
-            joueur={2}
+            joueur={1}
+            onPartieChange={setPartie}
           />
         </div>
       </>

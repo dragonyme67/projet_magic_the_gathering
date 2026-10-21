@@ -1,4 +1,4 @@
-import type { Carte } from "../interfaces/Carte"
+import type { CarteEnJeu, Partie } from "../interfaces/Partie"
 import ListeCarteComponent from '../components/ListeCarteComponent';
 import BibliothequeComponent from '../components/BibliothequeComponent';
 import PileFaceVisibleComponent from '../components/PileFaceVisibleComponent';
@@ -6,54 +6,50 @@ import PileFaceVisibleComponent from '../components/PileFaceVisibleComponent';
 interface JoueurComponentProps {
     joueur: number
     actif?: boolean
-    main: Carte[];
+    main: CarteEnJeu[];
     bibliotheque: number;
-    cimetiere: Carte[];
-    exil: Carte[];
-    champDeBataille: Carte[];
+    cimetiere: CarteEnJeu[];
+    exil: CarteEnJeu[];
+    champDeBataille: CarteEnJeu[];
+    onPartieChange?: (partie: Partie) => void;
 }
 
 
-function JoueurComponent({ joueur, actif = false, main, bibliotheque, cimetiere, exil, champDeBataille }: JoueurComponentProps) {
+function JoueurComponent({ joueur, main, bibliotheque, cimetiere, exil, champDeBataille, onPartieChange }: JoueurComponentProps) {
     return (
         <>
-            <div className={`flex flex-1 min-h-0 flex-col overflow-hidden gap-2 rounded-2xl bg-[#2a4d3f]/25 p-2 ${joueur == 1 ? 'flex-col-reverse' : 'flex-col'} ${actif ? 'ring-2 ring-[#d8c27c]' : 'ring-1 ring-[#cfe0d0]/20'}`}>
+            <div className={`flex flex-1 min-h-0 flex-col overflow-hidden gap-2 ${joueur === 0 ? 'flex-col-reverse' : 'flex-col'}`}>
                 {/* Champ de bataille du joueur */}
-                <div className="relative flex flex-1 shrink-0 overflow-hidden rounded-xl border border-dashed border-[#cfe0d0]/35 bg-[#2a4d3f]/30 p-2">
-                    {champDeBataille.length === 0 && (
-                        <span className="pointer-events-none absolute inset-0 flex items-center justify-center font-titre text-xl italic text-[#f2efe4]/40">
-                            Champ de bataille
-                        </span>
-                    )}
-                    <ListeCarteComponent cartes={champDeBataille} />
+                <div className="flex flex-1 shrink-0 overflow-hidden border-y border-gray-400 p-2 bg-gray-500">
+                    <ListeCarteComponent cartes={champDeBataille} joueur={joueur}/>
                 </div>
                 <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
                     <div className="flex h-full w-full justify-around gap-2">
-                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
-                            {/* Exil du joueur du haut */}
-                            <div className="font-titre text-base font-bold text-[#f2efe4]">
+                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
+                            {/* Exil du joueur */}
+                            <div>
                                 Exil
                             </div>
-                            <PileFaceVisibleComponent cartes={exil} />
+                            <PileFaceVisibleComponent cartes={exil} joueur={joueur}/>
                         </div>
 
-                        {/* Main du joueur du haut */}
-                        <div className="h-full w-3/5 shrink-0 overflow-hidden rounded-xl border border-[#d8c27c]/35 bg-[#2a4d3f]/60 p-2">
-                            <ListeCarteComponent cartes={main} />
+                        {/* Main du joueur */}
+                        <div className="h-full w-3/5 shrink-0 overflow-hidden border-y border-gray-400 p-2 bg-red-200">
+                            <ListeCarteComponent cartes={main} joueur={joueur}/>
                         </div>
-                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
-                            {/* Bibliothèque du joueur du haut */}
-                            <div className="font-titre text-base font-bold text-[#f2efe4]">
+                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
+                            {/* Bibliothèque du joueur */}
+                            <div>
                                 Bibliothèque
                             </div>
-                            <BibliothequeComponent nb_cartes={bibliotheque} />
+                            <BibliothequeComponent nb_cartes={bibliotheque} joueur={joueur} onPiocher={onPartieChange}/>
                         </div>
-                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden rounded-xl border border-[#cfe0d0]/25 bg-[#2a4d3f]/50 p-2">
-                            {/* Cimetière du joueur du haut */}
-                            <div className="font-titre text-base font-bold text-[#f2efe4]">
+                        <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
+                            {/* Cimetière du joueur */}
+                            <div>
                                 Cimetière
                             </div>
-                            <PileFaceVisibleComponent cartes={cimetiere} />
+                            <PileFaceVisibleComponent cartes={cimetiere} joueur={joueur}/>
                         </div>
                     </div>
                 </div>

@@ -1,8 +1,9 @@
-import type { Carte } from "../interfaces/Carte"
+import type { CarteEnJeu } from "../interfaces/Partie"
 import CarteComponent from '../components/CarteComponent';
 
 interface ListeCartesProps {
-    cartes: Carte[];
+    cartes: CarteEnJeu[];
+    joueur: number;
 }
 
 
@@ -11,7 +12,7 @@ function ListeCartesProps({ cartes }: ListeCartesProps) {
     <div className="grid min-h-0 h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)] gap-1">        
         {cartes.map((carte) => (
             <CarteComponent
-                key={carte.nom}
+                key={carte.id}
                 nom={carte.nom}
                 image={carte.image}
                 description={carte.description}

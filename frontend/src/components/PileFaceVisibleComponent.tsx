@@ -1,8 +1,9 @@
-import type { Carte } from "../interfaces/Carte"
+import type { CarteEnJeu } from "../interfaces/Partie"
 import CarteComponent from "./CarteComponent"
 
 interface PileFaceVisibleComponentProps {
-    cartes: Carte[];
+    cartes: CarteEnJeu[];
+    joueur: number;
 }
 
 function PileFaceVisibleComponent({ cartes }: PileFaceVisibleComponentProps) {
