@@ -28,14 +28,14 @@ function Jeu() {
   const bas = partie?.joueurs[1]
 
   return (
-    <main className="flex flex-1 min-h-0 text-white bg-[radial-gradient(ellipse_at_center,var(--color-emerald-800),var(--color-emerald-950))]">
+    <main className="flex flex-1 min-h-0 text-[#f2efe4] bg-[radial-gradient(ellipse_at_center,#6b9b7c,#41705b)]">
 
       {chargement && <p className="m-4">Création de la partie...</p>}
-      {erreur && <p className="m-4 text-red-300">Erreur : {erreur}</p>}
+      {erreur && <p className="m-4 text-[#f3c5b8]">Erreur : {erreur}</p>}
 
       {partie && haut && bas && (
       <>
-        <div className="flex h-full w-48 shrink-0 min-h-0 overflow-hidden gap-2 border-r border-amber-300/20 bg-black/40">
+        <div className="flex h-full w-48 shrink-0 min-h-0 overflow-hidden gap-2 border-r border-[#cfe0d0]/25 bg-[#2a4d3f]/55">
           <InfoPartieComponent
             vie_joueur_haut={haut.vie}
             vie_joueur_bas={bas.vie}
