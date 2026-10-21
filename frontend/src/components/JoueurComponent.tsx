@@ -6,7 +6,7 @@ import PileFaceVisibleComponent from '../components/PileFaceVisibleComponent';
 interface JoueurComponentProps {
     joueur: number
     main: Carte[];
-    bibliotheque: Carte[];
+    bibliotheque: number;
     cimetiere: Carte[];
     exil: Carte[];
     champDeBataille: Carte[];
@@ -40,7 +40,7 @@ function JoueurComponent({ joueur, main, bibliotheque, cimetiere, exil, champDeB
                             <div>
                                 Bibliothèque
                             </div>
-                            <BibliothequeComponent nb_cartes={bibliotheque.length} />
+                            <BibliothequeComponent nb_cartes={bibliotheque} />
                         </div>
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
                             {/* Cimetière du joueur du haut */}

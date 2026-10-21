@@ -6,7 +6,7 @@ void CarteController::test(
 ) {
     auto db = drogon::app().getDbClient("default");
     db->execSqlAsync(
-        "SELECT nom_imprime, image_png, cout_mana, texte_imprime FROM Cartes LIMIT 7",
+        "SELECT nom_imprime, image_png, cout_mana, texte_imprime FROM Cartes LIMIT 20",
 
         // Requête réussie
         [callback](const drogon::orm::Result& result)

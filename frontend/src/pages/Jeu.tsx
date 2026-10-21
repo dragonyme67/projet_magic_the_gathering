@@ -1,32 +1,31 @@
 import { useEffect, useState } from 'react'
-import type { Carte } from "../interfaces/Carte"
+import type { Partie } from "../interfaces/Partie"
 import JoueurComponent from '../components/JoueurComponent';
 import InfoPartieComponent from '../components/InfoPartieComponent';
 
 function Jeu() {
 
-  const [cartes, setCartes] = useState<Carte[]>([])
+  const [partie, setPartie] = useState<Partie | null>(null)
   const [erreur, setErreur] = useState<string | null>(null)
   const [chargement, setChargement] = useState(true)
 
   useEffect(() => {
-    fetch('/api/cartes/test')
+    let ignore = false
+
+    fetch('/api/jeu', { method: 'POST' })
       .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP : ${response.status}`)
-        }
+        if (!response.ok) throw new Error(`Erreur HTTP : ${response.status}`)
         return response.json()
       })
-      .then((data) => {
-        setCartes(data)
-      })
-      .catch((error: Error) => {
-        setErreur(error.message)
-      })
-      .finally(() => {
-        setChargement(false)
-      })
+      .then((data: Partie) => { if (!ignore) setPartie(data) })
+      .catch((error: Error) => { if (!ignore) setErreur(error.message) })
+      .finally(() => { if (!ignore) setChargement(false) })
+
+    return () => { ignore = true }
   }, [])
+
+  const haut = partie?.joueurs[0]
+  const bas = partie?.joueurs[1]
 
   return (
     <main className="flex flex-1 min-h-0">
@@ -34,36 +33,38 @@ function Jeu() {
       {chargement && <p>Création de la partie...</p>}
       {erreur && <p>Erreur : {erreur}</p>}
 
+      {partie && haut && bas && (
       <>
-          <div className="flex h-full w-[8vw] min-h-0 overflow-hidden gap-2 bg-purple-600">
+        <div className="flex h-full w-[8vw] min-h-0 overflow-hidden gap-2 bg-purple-600">
           <InfoPartieComponent
-            vie_joueur_haut={20}
-            vie_joueur_bas={20}
-            tour={1}
-            nom_joueur_haut={"Alice"}
-            nom_joueur_bas={"Bob"}
-            joueur_actif={"Alice"}
+            vie_joueur_haut={haut.vie}
+            vie_joueur_bas={bas.vie}
+            tour={partie.tour}
+            nom_joueur_haut={haut.nom}
+            nom_joueur_bas={bas.nom}
+            joueur_actif={partie?.joueurs[partie.joueurActif].nom}
           />
-          </div>
-          <div className="flex flex-1 min-h-0 flex-col h-full w-full">
-            <JoueurComponent
-              main={cartes}
-              bibliotheque={cartes}
-              cimetiere={cartes}
-              exil={cartes}
-              champDeBataille={cartes}
-              joueur={1}
-            />
-            <JoueurComponent
-              main={cartes}
-              bibliotheque={cartes}
-              cimetiere={cartes}
-              exil={cartes}
-              champDeBataille={cartes}
-              joueur={2}
-            />
-          </div>
+        </div>
+        <div className="flex flex-1 min-h-0 flex-col h-full w-full">
+          <JoueurComponent
+            main={haut.main}
+            bibliotheque={haut.bibliotheque}
+            cimetiere={haut.cimetiere}
+            exil={haut.exil}
+            champDeBataille={haut.champ_de_bataille}
+            joueur={1}
+          />
+          <JoueurComponent
+            main={bas.main}
+            bibliotheque={bas.bibliotheque}
+            cimetiere={bas.cimetiere}
+            exil={bas.exil}
+            champDeBataille={bas.champ_de_bataille}
+            joueur={2}
+          />
+        </div>
       </>
+      )}
     </main>
   )
 }

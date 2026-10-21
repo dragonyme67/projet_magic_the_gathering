@@ -36,10 +36,7 @@ static bool lireTexte(const drogon::HttpRequestPtr& req, const char* cle, std::s
     return true;
 }
 
-void JeuController::creer(
-    const drogon::HttpRequestPtr&,
-    std::function<void(const drogon::HttpResponsePtr&)>&& callback
-) {
+void JeuController::creer( const drogon::HttpRequestPtr&, std::function<void(const drogon::HttpResponsePtr&)>&& callback) {
     try {
         auto reponse = drogon::HttpResponse::newHttpJsonResponse(service_.creer());
         reponse->setStatusCode(drogon::k201Created);
