@@ -22,7 +22,7 @@ function JoueurComponent({ joueur, main, bibliotheque, cimetiere, exil, champDeB
                     <ListeCarteComponent cartes={champDeBataille} />
                 </div>
                 <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
-                    <div className="flex h-full w-full items-center justify-center gap-2">
+                    <div className="flex h-full w-full justify-around gap-2">
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
                             {/* Exil du joueur du haut */}
                             <div>
