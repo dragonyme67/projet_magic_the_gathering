@@ -15,13 +15,25 @@ std::string translate(const std::string& regle) {
 
 }
 
-std::string ArbitreChr::valider(const Etat& etat, JoueurId joueur, const Action& action) const {
+struct ArbitreChr::Impl {
     Verdict verdict;
-    auto espace = ARBITRE::create(etat, verdict);
-    espace->demande(static_cast<int>(joueur), static_cast<int>(action.type), etat.tour);
+    chr::Shared_obj<ARBITRE> espace;
+};
 
-    if (verdict.regle.empty()) return "";
-    return translate(verdict.regle);
+ArbitreChr::ArbitreChr() : impl_(std::make_unique<Impl>()) {}
+ArbitreChr::~ArbitreChr() = default;
+
+std::string ArbitreChr::valider(const Etat& etat, JoueurId joueur, const Action& action) const {
+    // 1. L'espace n'est créé QU'UNE SEULE FOIS (au premier coup de la partie) :
+    if (!impl_->espace) {
+        impl_->espace = ARBITRE::create(etat, impl_->verdict);
+    }
+    // 2. On réinitialise le verdict du coup précédent :
+    impl_->verdict.regle.clear();
+    // 3. On pose la contrainte dans le store EXISTANT :
+    impl_->espace->demande(static_cast<int>(joueur), static_cast<int>(action.type), etat.tour);
+    if (impl_->verdict.regle.empty()) return "";
+    return translate(impl_->verdict.regle);
 }
 
 }
