@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "magic/Action.hpp"
-#include "magic/Arbitre.hpp"
+#include "magic/ArbitreChr.hpp"
 #include "magic/Carte.hpp"
 #include "magic/Etat.hpp"
 #include "magic/Evenement.hpp"
@@ -22,7 +22,7 @@ class Partie {
 public:
     // un joueur par deck ; même graine = même mélange
     Partie(const std::vector<Deck>& decks, unsigned graine,
-           std::unique_ptr<Arbitre> arbitre = std::make_unique<ArbitrePermissif>(),
+           std::unique_ptr<Arbitre> arbitre = std::make_unique<ArbitreChr>(),
            int mainInitiale = 7);
 
     Resultat appliquer(JoueurId joueur, const Action& action);

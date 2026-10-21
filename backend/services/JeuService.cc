@@ -1,4 +1,5 @@
 #include "JeuService.h"
+#include <iostream>
 
 #include <cstdlib>
 #include <vector>
@@ -115,7 +116,9 @@ bool JeuService::appliquer(magic::JoueurId joueur, const magic::Action& action, 
     reponse.json = Json::Value();
     reponse.json["accepte"] = resultat.accepte;
     if (!resultat.accepte) {
+        // TO DO : Gérer le JSON des evenements  
         reponse.json["refus"] = resultat.refus;
+        std::cout << resultat.refus << std::endl;
         return true;
     }
 
