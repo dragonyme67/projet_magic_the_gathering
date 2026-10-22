@@ -1,4 +1,4 @@
-import type { CarteEnJeu, Partie } from "../interfaces/Partie"
+import type { CarteEnJeu, Partie, ReponseAction } from "../interfaces/Partie"
 import ListeCarteComponent from '../components/ListeCarteComponent';
 import BibliothequeComponent from '../components/BibliothequeComponent';
 import PileFaceVisibleComponent from '../components/PileFaceVisibleComponent';
@@ -16,12 +16,40 @@ interface JoueurComponentProps {
 
 
 function JoueurComponent({ joueur, main, bibliotheque, cimetiere, exil, champDeBataille, onPartieChange }: JoueurComponentProps) {
+
+    async function engage(carte: CarteEnJeu) {
+        try {
+            const response = await fetch("/api/jeu/engager", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    joueur: joueur,
+                    objet: carte.id
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                throw new Error(errorData?.refus || errorData?.error || "Erreur lors de l'engagement");
+            }
+
+            const data: ReponseAction = await response.json();
+            if (data.partie && onPartieChange) {
+                onPartieChange(data.partie);
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <>
             <div className={`flex flex-1 min-h-0 flex-col overflow-hidden gap-2 ${joueur === 0 ? 'flex-col-reverse' : 'flex-col'}`}>
                 {/* Champ de bataille du joueur */}
                 <div className="flex flex-1 shrink-0 overflow-hidden border-y border-gray-400 p-2 bg-gray-500">
-                    <ListeCarteComponent cartes={champDeBataille} joueur={joueur}/>
+                    <ListeCarteComponent cartes={champDeBataille} joueur={joueur} onCarteClick={engage} />
                 </div>
                 <div className="flex flex-1 min-h-0 flex-col overflow-hidden">
                     <div className="flex h-full w-full justify-around gap-2">
@@ -30,26 +58,26 @@ function JoueurComponent({ joueur, main, bibliotheque, cimetiere, exil, champDeB
                             <div>
                                 Exil
                             </div>
-                            <PileFaceVisibleComponent cartes={exil} joueur={joueur}/>
+                            <PileFaceVisibleComponent cartes={exil} joueur={joueur} />
                         </div>
 
                         {/* Main du joueur */}
                         <div className="h-full w-3/5 shrink-0 overflow-hidden border-y border-gray-400 p-2 bg-red-200">
-                            <ListeCarteComponent cartes={main} joueur={joueur}/>
+                            <ListeCarteComponent cartes={main} joueur={joueur} onCarteClick={engage}/>
                         </div>
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
                             {/* Bibliothèque du joueur */}
                             <div>
                                 Bibliothèque
                             </div>
-                            <BibliothequeComponent nb_cartes={bibliotheque} joueur={joueur} onPiocher={onPartieChange}/>
+                            <BibliothequeComponent nb_cartes={bibliotheque} joueur={joueur} onPiocher={onPartieChange} />
                         </div>
                         <div className="flex flex-col w-1/10 items-center justify-center gap-2 h-full shrink-0 overflow-hidden p-2 bg-gray-500">
                             {/* Cimetière du joueur */}
                             <div>
                                 Cimetière
                             </div>
-                            <PileFaceVisibleComponent cartes={cimetiere} joueur={joueur}/>
+                            <PileFaceVisibleComponent cartes={cimetiere} joueur={joueur} />
                         </div>
                     </div>
                 </div>

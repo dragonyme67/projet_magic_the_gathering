@@ -4,10 +4,11 @@ import CarteComponent from '../components/CarteComponent';
 interface ListeCartesProps {
     cartes: CarteEnJeu[];
     joueur: number;
+    onCarteClick?: (carte: CarteEnJeu) => void;
 }
 
 
-function ListeCartesProps({ cartes }: ListeCartesProps) {
+function ListeCartesProps({ cartes, onCarteClick }: ListeCartesProps) {
   return (
     <div className="grid min-h-0 h-full w-full grid-flow-col auto-cols-[minmax(0,1fr)] gap-1">        
         {cartes.map((carte) => (
@@ -16,6 +17,8 @@ function ListeCartesProps({ cartes }: ListeCartesProps) {
                 nom={carte.nom}
                 image={carte.image}
                 description={carte.description}
+                onClick={onCarteClick ? () => onCarteClick(carte) : undefined}
+                estEngage = {carte.engage}
             />
         ))}
     </div>

@@ -1,11 +1,29 @@
 #include <chrpp.hh>
-
+#include "magic/Action.hpp"
 #include "Tools.hpp"
 
 <CHR name="ARBITRE" parameters="const magic::Etat& etat, Verdict& verdict">
-    <chr_constraint> demande(+int, +int, +int), a_pioche(+int, +int)
-    pas_son_tour @ demande(J, _, _) <=> J != etat.joueurActif | refuser(verdict, "pas_son_tour");;
-    pioche_vide @ demande(J, T, _) <=> T == 0 && bibliotheque_vide(etat, J) | refuser(verdict, "piocher_vide");;
-    deja_piocher @ a_pioche(J, Tour) \ demande(J, T, Tour) <=> T == 0 | refuser(verdict, "deja_piocher");;
-    pioche @ demande(J, T, Tour) <=> T == 0 | a_pioche(J, Tour);;
+    <chr_constraint> 
+        demande_piocher(+int), 
+        demande_deplacer(+int, +int), 
+        demande_engager(+int, +int), 
+        demande_degager(+int, +int), 
+        demande_changer_vie(+int, +int), 
+        demande_fin_tour(+int), 
+        doit_etre_son_tour(+int),
+        a_pioche(+int)
+
+    pas_son_tour @ doit_etre_son_tour(J) <=> J != etat.joueurActif | refuser(verdict, "pas_son_tour");;
+    tour_ok @ doit_etre_son_tour(_) <=> true ;;
+
+    piocher_doit_etre_son_tour @ demande_piocher(J) ==> doit_etre_son_tour(J);;
+    pioche_vide @ demande_piocher(J) <=> bibliotheque_vide(etat, J) | refuser(verdict, "pioche_vide");;
+    deja_pioche @ a_pioche(J) \ demande_piocher(J) <=> refuser(verdict, "deja_pioche");;
+    pioche @ demande_piocher(J) <=> a_pioche(J);;
+
+    deja_engage @ demande_engager(_, O) <=> carte_engagee(etat, O) | refuser(verdict, "deja_engage");;
+    engage @ demande_engager(_, _) <=> true;;
+
+    deja_degage @ demande_degager(_, O) <=> !carte_engagee(etat, O) | refuser(verdict, "deja_degage");;
+    degage @ demande_degager(_, _) <=> true;;
 </CHR>

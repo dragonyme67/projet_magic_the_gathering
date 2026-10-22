@@ -1,17 +1,25 @@
-import type { Carte } from "../interfaces/Carte"
 import { useState } from "react"
 
-function CarteComponent({ nom, image, description }: Carte) {
+interface CarteProps {
+  nom: string;
+  image: string;
+  description : string;
+  estEngage: boolean;
+  onClick?: () => void;
+}
+
+function CarteComponent({ nom, image, description, estEngage ,onClick }: CarteProps) {
   const [survolee, setSurvolee] = useState(false);
 
   return (
     <>
       <div
-        className="flex h-full w-full min-h-0 min-w-0 overflow-hidden items-center justify-center">
+        className="flex h-full w-full min-h-0 min-w-0 items-center justify-center">
         <img
           src={image}
           alt={nom}
-          className="block h-full object-contain rounded-2xl cursor-pointer transition duration-150 hover:brightness-110 hover:saturate-125"
+          onClick={onClick}
+          className={`block h-full object-contain rounded-2xl cursor-pointer hover:brightness-110 hover:saturate-125 ${estEngage === true ? 'rotate-30 transition duration-200' : ''}`}
           onMouseEnter={() => setSurvolee(true)}
           onMouseLeave={() => setSurvolee(false)}
         />
