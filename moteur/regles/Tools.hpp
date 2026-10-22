@@ -8,5 +8,6 @@ struct Verdict {
     std::string regle;
 };
 
-bool bibliotheque_vide(const magic::Etat& etat, int joueur);
 void refuser(Verdict& verdict, const std::string& regle);
+bool carte_engagee(const magic::Etat& etat, int objet);
+bool bibliotheque_vide(const magic::Etat& etat, int joueur);

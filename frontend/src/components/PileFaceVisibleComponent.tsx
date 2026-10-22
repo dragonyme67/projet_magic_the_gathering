@@ -15,10 +15,11 @@ function PileFaceVisibleComponent({ cartes }: PileFaceVisibleComponentProps) {
                 <>
                     <div className="absolute inset-0">
                         <CarteComponent
-                            key={carteDessus.nom}
+                            key={carteDessus.id}
                             nom={carteDessus.nom}
                             image={carteDessus.image}
                             description={carteDessus.description}
+                            estEngage = {false}
                         />
                     </div>
                     <span className="pointer-events-none absolute inset-x-0 bottom-2 mx-auto w-fit min-w-8 rounded-full bg-[#2a4d3f]/90 px-2 py-0.5 text-center font-titre text-base font-bold text-[#e4d194] ring-1 ring-[#d8c27c]/50">
