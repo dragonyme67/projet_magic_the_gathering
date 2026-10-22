@@ -70,4 +70,12 @@ void Etat::finDuTour() {
     ++tour;
 }
 
+bool Etat::estEngage(ObjetId id){
+    return objets.at(id).engage;
+}
+
+bool Etat::aMalInvocation(ObjetId id){
+    return objets.at(id).malInvocation;
+}
+
 }

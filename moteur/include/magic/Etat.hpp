@@ -24,6 +24,7 @@ struct Objet {
     std::shared_ptr<const Carte> carte;
     JoueurId proprietaire = 0;
     Zone zone = Zone::Bibliotheque;
+    bool malInvocation = false;
     bool engage = false;
 };
 
@@ -37,10 +38,9 @@ struct Joueur {
     const std::vector<ObjetId>& zone(Zone z) const { return zones[static_cast<int>(z)]; }
 };
 
-// Opérations de base, sans règle. Id invalide : std::out_of_range
 struct Etat {
     std::vector<Joueur> joueurs;
-    std::vector<Objet> objets;  // indexé par ObjetId, jamais supprimé
+    std::vector<Objet> objets;  
     JoueurId joueurActif = 0;
     int tour = 1;
 
@@ -51,11 +51,11 @@ struct Etat {
 
     ObjetId creerObjet(std::shared_ptr<const Carte> carte, JoueurId proprietaire, Zone zone);
 
-    // zone du propriétaire
     void deplacer(ObjetId id, Zone destination);
-    // kAucunObjet si la bibliothèque est vide
     ObjetId piocher(JoueurId joueur);
     void engager(ObjetId id, bool engage);
+    bool estEngage(ObjetId id) const;
+    bool aMalInvocation(ObjetId id) const;
     void changerVie(JoueurId joueur, int delta);
     void finDuTour();
 };
